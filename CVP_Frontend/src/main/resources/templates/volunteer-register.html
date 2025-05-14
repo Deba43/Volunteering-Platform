@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Registration</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Main background */
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+         .navbar {
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            background: #981fa1;
+            padding: 15px 0;
+        }
+        .navbar-brand {
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+        .nav-link {
+            font-size: 1.2rem;
+            padding: 10px 20px;
+            color: #fff;
+        }
+        .dropdown-menu {
+            background: #222;
+        }
+        .dropdown-item {
+            color: #fff;
+        }
+        .dropdown-item:hover {
+            background: #981fa1;
+            color: white;
+        }
+        
+        /* Registration Card */
+        .registration-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            margin: 100px auto;
+            max-width: 800px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .registration-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+        
+        .card-header {
+             background: #6A1B9A ;
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+        
+        .card-header h2 {
+            margin: 0;
+            font-weight: 600;
+            font-size: 1.8rem;
+        }
+        
+        .card-body {
+            padding: 30px;
+        }
+        
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 1.2rem;
+            position: relative;
+        }
+        
+        .form-control {
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 12px 15px 12px 40px;
+            height: auto;
+            transition: all 0.3s;
+        }
+        
+        .form-control:focus {
+            border-color: #6a11cb;
+            box-shadow: 0 0 0 3px rgba(106, 17, 203, 0.1);
+        }
+        
+        .input-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6a11cb;
+            pointer-events: none;
+        }
+        
+        /* Buttons */
+        .btn-verify {
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .btn-verify:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(106, 17, 203, 0.3);
+        }
+        
+        .btn-register {
+            background: linear-gradient(135deg, #00b09b 0%, #96c93d 100%);
+            border: none;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 1.1rem;
+            width: 100%;
+            transition: all 0.3s;
+        }
+        
+        .btn-register:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 176, 155, 0.3);
+        }
+        
+        /* OTP Section */
+        .otp-section {
+            display: none;
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        /* Messages */
+        .message-box {
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: none;
+            animation: slideDown 0.3s ease-out;
+        }
+        
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .success {
+            background-color: #d4edda;
+            color: #155724;
+            border-left: 4px solid #28a745;
+        }
+        
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border-left: 4px solid #dc3545;
+        }
+        
+        /* Radio Buttons */
+        .radio-group {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .radio-label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        
+        .radio-label input {
+            margin-right: 8px;
+            accent-color: #6a11cb;
+        }
+        
+        /* Password Toggle */
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #6a11cb;
+        }
+        .form-group {
+    position: relative;
+}
+
+/* Lock icon (left side) */
+.input-icon {
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%);
+    color: #aaa;
+    pointer-events: none;
+}
+
+/* Eye icon (right side) */
+.password-toggle {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    color: #aaa;
+    cursor: pointer;
+}
+
+/* Prevent input resize on validation error */
+.form-control {
+    padding-left: 35px;
+    padding-right: 35px;
+    box-sizing: border-box;
+}
+
+/* Prevent invalid-feedback from shifting layout */
+.invalid-feedback {
+    position: absolute;
+    bottom: -20px;
+    left: 0;
+    font-size: 0.875rem;
+    color: #dc3545;
+}
+
+        
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .registration-card {
+                margin: 80px 20px;
+            }
+            
+            .card-body {
+                padding: 20px;
+            }
+
+        }
+    </style>
+</head>
+<body>
+   <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">Community Volunteering</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#opportunities">Opportunities</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="loginDropdown" role="button" data-bs-toggle="dropdown">Login</a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" th:href="@{/auth/volunteers/login}">As a Volunteer</a></li>
+                            <li><a class="dropdown-item" th:href="@{/auth/organizer/login}">As an Organization</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- New Registration Card -->
+    <div class="container">
+        <div class="registration-card">
+            <div class="card-header">
+                <h2><i class="fas fa-user-plus me-2"></i>Create Your Account</h2>
+            </div>
+            <div class="card-body">
+                <form th:action="@{/users/confirm}" method="post">
+                    <div class="row">
+                        <!-- First Name -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <i class="fas fa-user input-icon"></i>
+                                <input type="text" class="form-control" placeholder="First Name" name="firstName" required>
+                            </div>
+                        </div>
+                        
+                        <!-- Last Name -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <i class="fas fa-user-tag input-icon"></i>
+                                <input type="text" class="form-control" placeholder="Last Name" name="lastName" required>
+                            </div>
+                        </div>
+                        
+                        <!-- Username -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <i class="fas fa-at input-icon"></i>
+                                <input type="text" class="form-control" placeholder="Username" name="userName" required>
+                            </div>
+                        </div>
+                        
+                        <!-- Password -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <i class="fas fa-lock input-icon"></i>
+                                <input type="password" id="password" class="form-control" placeholder="Password" name="password" required>
+                                <div class="invalid-feedback">
+            Password must be at least 8 characters and include letters, numbers, and special characters.
+        </div>
+        <i class="fas fa-eye password-toggle" id="togglePassword" ></i>
+                            </div>
+                        </div>
+                        
+                        <!-- Email with Verification -->
+                        <div class="col-12">
+                            <div class="form-group">
+                                <i class="fas fa-envelope input-icon"></i>
+                                <input type="email" class="form-control" placeholder="Email Address" name="email" id="email" required>
+                            </div>
+                           
+                        </div>
+                        
+                        <!-- OTP Section -->
+                      
+                        
+                        <!-- Phone Number -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <i class="fas fa-phone input-icon"></i>
+                                <input type="text" class="form-control" placeholder="Phone Number" name="phoneNumber" required>
+                            </div>
+                        </div>
+                        
+                        <!-- Alternative Email -->
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <i class="fas fa-envelope-open input-icon"></i>
+                                <input type="email" class="form-control" placeholder="Alternative Email" name="alternativeEmail">
+                            </div>
+                        </div>
+                        
+                        <!-- Gender -->
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label class="mb-2 d-block">Gender</label>
+                                <div class="radio-group">
+                                    <label class="radio-label">
+                                        <input type="radio" name="gender" value="male"> Male
+                                    </label>
+                                    <label class="radio-label">
+                                        <input type="radio" name="gender" value="female"> Female
+                                    </label>
+                                    <label class="radio-label">
+                                        <input type="radio" name="gender" value="other"> Other
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Messages -->
+                        <div class="col-12">
+                            <div id="otpsuccessMessage" class="message-box success">
+                                <i class="fas fa-check-circle me-2"></i>Verification code sent successfully!
+                            </div>
+                            <div id="otperrorMessage" class="message-box error">
+                                <i class="fas fa-exclamation-circle me-2"></i>Failed to send verification code.
+                            </div>
+                            <div id="successMessage" class="message-box success">
+                                <i class="fas fa-check-circle me-2"></i>Email verified successfully!
+                            </div>
+                            <div id="errorMessage" class="message-box error">
+                                <i class="fas fa-exclamation-circle me-2"></i>Verification failed. Please try again.
+                            </div>
+                        </div>
+                        
+                        <!-- Submit Button -->
+                        <div class="col-12 mt-4">
+                            <button type="submit" class="btn btn-register">
+                                <i class="fas fa-user-plus me-2"></i>Send OTP
+                                
+                            </button>
+                        </div>
+                        <a href="/auth/volunteers/login" style="color:#981fa1; text-align:center; margin-top:2%">Already have an account? Login</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+     <div th:if="${message}" class="class="message-box success"" th:text="${message}"></div>
+
+    <!-- footer -->
+    <footer class="bg-black text-white p-4 text-center">
+        <p>&copy; 2025 Community Volunteering. All rights reserved.</p>
+    </footer>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        
+        function validateEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+
+         const passwordInput = document.getElementById('password');
+    const form = document.querySelector('form'); // make sure your input is inside a <form>
+    
+    const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
+
+    form.addEventListener('submit', function (e) {
+        if (!passwordPattern.test(passwordInput.value)) {
+            passwordInput.classList.add('is-invalid');
+            e.preventDefault(); // prevent form from submitting
+        } else {
+            passwordInput.classList.remove('is-invalid');
+            passwordInput.classList.add('is-valid');
+        }
+    });
+
+    // Toggle password visibility
+    document.getElementById("togglePassword").addEventListener('click', function () {
+        const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+        passwordInput.setAttribute('type', type);
+        this.classList.toggle('fa-eye-slash');
+    });
+    </script>
+    <script src="/js/auth.js"></script>
+</body>
+</html>

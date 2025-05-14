@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title>My Signed-up Tasks</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body,
+      html {
+        font-family: "Poppins", sans-serif;
+        background: url("/images/background.jpg") no-repeat center center fixed;
+        background-size: cover;
+        color: #333;
+        height: 100%;
+        margin: 0;
+        padding-top: 80px; /* for navbar */
+      }
+
+      .container {
+        width: 90%;
+        max-width: 1000px;
+        margin: 0 auto;
+        background: white;
+        padding: 25px;
+        border-radius: 10px;
+        box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .btn {
+        display: inline-block;
+        margin-top: 20px;
+        padding: 10px 18px;
+        font-size: 16px;
+        background: #9933cc;
+        color: white;
+        text-decoration: none;
+        border-radius: 6px;
+        transition: 0.3s;
+      }
+
+      .btn:hover {
+        background: #310b6d;
+      }
+
+      h2 {
+        color: #4a148c;
+        font-size: 24px;
+        margin-bottom: 20px;
+        text-align: center;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+      }
+
+      th,
+      td {
+        padding: 12px;
+        text-align: center;
+        border-bottom: 1px solid #ddd;
+      }
+
+      th {
+        background: #9933cc;
+        color: white;
+      }
+
+      tr:nth-child(even) {
+        background: #f9f9f9;
+      }
+
+      tr:hover {
+        background: #ececec;
+        transition: 0.3s ease-in-out;
+      }
+
+      .back-btn {
+        position: absolute;
+        top: 20px;
+        right: 30px;
+        padding: 10px 15px;
+        background: #6c757d;
+        color: white;
+        border-radius: 5px;
+        text-decoration: none;
+        font-size: 14px;
+      }
+
+      .back-btn:hover {
+        background: #495057;
+      }
+
+      .navbar {
+        position: fixed;
+        width: 100%;
+        top: 0;
+        z-index: 1000;
+        background: #981fa1;
+        padding: 15px 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .navbar-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        max-width: 1200px;
+        padding: 0 1rem;
+      }
+
+      .navbar-brand {
+        font-size: 1.8rem;
+        font-weight: bold;
+        color: white;
+        text-decoration: none;
+      }
+
+      .navbar-nav {
+        list-style: none;
+        display: flex;
+        gap: 1rem;
+        margin: 0;
+      }
+
+      .nav-link {
+        font-size: 1.2rem;
+        padding: 10px 20px;
+        color: #fff;
+        text-decoration: none;
+      }
+
+      .nav-link:hover {
+        color: #f9ad55;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="navbar-container">
+        <a class="navbar-brand" href="#">Community Volunteering</a>
+        <ul class="navbar-nav">
+          <li><a class="nav-link" href="/">Home</a></li>
+          <li><a class="nav-link" href="/about">About</a></li>
+          <li><a class="nav-link" href="/viewAllTasks">Events</a></li>
+          <li class="nav-item">
+            <a
+              class="nav-link"
+              th:href="@{/users/profile/{id}(id=${session.loggedInUser.id})}"
+              >Profile</a
+            >
+          </li>
+          <li><a class="nav-link" th:href="@{/users/logout}">Logout</a></li>
+
+        </ul>
+      </div>
+    </nav>
+
+    <div class="container">
+      <h2>Tasks I Have Signed Up For</h2>
+
+      <div th:if="${signedUpTasks != null and !signedUpTasks.isEmpty()}">
+        <table>
+          <thead>
+            <tr>
+              <th>Task Name</th>
+              <th>Description</th>
+              <th>Signup Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="task : ${signedUpTasks}">
+              <td th:text="${task.taskName}">Sample Title</td>
+              <td th:text="${task.volunteerName}">Sample Name</td>
+              <td th:text="${#temporals.format(task.signupDate, 'dd-MM-yyyy')}">
+                01-01-2024
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div
+        th:unless="${signedUpTasks != null and !signedUpTasks.isEmpty()}"
+        style="text-align: center; padding: 30px"
+      >
+        <p style="font-size: 18px; color: #555">
+          You haven't signed up for any tasks yet.
+        </p>
+      </div>
+
+      <div style="text-align: center; margin-top: 30px">
+        <a href="/tasksignup/form" class="btn">Signup for More Tasks</a>
+      </div>
+    </div>
+    <script src="/js/auth.js"></script>
+  </body>
+</html>

@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>My Signed-up Tasks</title>
+    <style>  
+body, html {
+    font-family: 'Poppins', sans-serif;
+    background: url('background.jpg') no-repeat center center fixed;
+    background-size: cover;
+    color: #fff;
+    height: 100%;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.container {
+    width: 200%;
+    max-width: 1300px;
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+    text-align: center; 
+}
+
+.btn {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 10px 18px;
+    font-size: 16px;
+    background: #9933CC;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: 0.3s;
+    text-align: center;
+}
+
+.btn-container {
+    text-align: center;
+    margin-top: 20px;
+}
+        h2 {
+            color: #4a148c;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background: #9933CC;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+
+        tr:hover {
+            background: #ececec;
+            transition: 0.3s ease-in-out;
+        }
+
+        .btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 18px;
+            font-size: 16px;
+            background: #9933CC;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            transition: 0.3s;
+        }
+
+        .btn:hover {
+            background: #310b6d;
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            padding: 10px 15px;
+            background: #6c757d;
+            color: white;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 14px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .back-btn:hover {
+            background: #495057;
+        }
+
+        .navbar {
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            background: #981fa1;
+            padding: 15px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            max-width: 1200px;
+            padding: 0 1rem;
+        }
+
+        .navbar-brand {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+        }
+
+        .navbar-nav {
+            list-style: none;
+            display: flex;
+            gap: 1rem;
+            margin: 0;
+        }
+
+        .nav-item {
+            list-style: none;
+        }
+
+        .nav-link {
+            font-size: 1.2rem;
+            padding: 10px 20px;
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .nav-link:hover {
+            color: #f9ad55;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a class="navbar-brand" href="#">Community Volunteering</a>
+            <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="/about">About</a></li>
+                <li class="nav-item"><a class="nav-link" href="/events">Events</a></li>
+                <li class="nav-item"><a class="nav-link" href="/volunteer">Volunteer</a></li>
+                <li class="nav-item"><a class="nav-link" href="/logout">Logout</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <a href="javascript:history.back()" class="back-btn">⬅ Back</a>
+
+    <div class="container">
+        <h2>Tasks I Have Signed Up For</h2>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th>Task Name</th>
+                    <th>Description</th>
+                    <th>Signup Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="task : ${signedUpTasks}">
+                    <td th:text="${task.title}"></td>
+                    <td th:text="${task.description}"></td>
+                    <td th:text="${task.eventDate}"></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <a href="/tasksignup/form" class="btn">Signup for More Tasks</a>
+    </div>
+    <script src="/js/auth.js"></script>
+</body>
+</html>

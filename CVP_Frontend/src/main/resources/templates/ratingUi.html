@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Rate Your Experience</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .rating-card {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            background: white;
+            text-align: center;
+        }
+        .rating-stars {
+            font-size: 2rem;
+            cursor: pointer;
+            color: #ccc;
+            transition: color 0.3s ease;
+        }
+        .rating-stars.active {
+            color: gold; /* Filled star */
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="card rating-card">
+        <h3 class="mb-3">Rate Your Experience</h3>
+        <div class="mb-3">
+            <span class="rating-stars" data-value="1">&#9733;</span>
+            <span class="rating-stars" data-value="2">&#9733;</span>
+            <span class="rating-stars" data-value="3">&#9733;</span>
+            <span class="rating-stars" data-value="4">&#9733;</span>
+            <span class="rating-stars" data-value="5">&#9733;</span>
+        </div>
+        <p class="lead">Selected Rating: <span id="ratingValue">0</span>/5</p>
+        <form th:action="@{/submitRating}" method="post">
+            <input type="hidden" name="rating" id="ratingInput">
+            <button type="submit" class="btn btn-primary w-100 mt-3">Add Rating</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $(".rating-stars").click(function() {
+            let rating = $(this).data("value");
+            $("#ratingValue").text(rating);
+            $("#ratingInput").val(rating);
+
+            $(".rating-stars").removeClass("active");
+
+            // Highlight all selected stars
+            $(".rating-stars").each(function() {
+                if ($(this).data("value") <= rating) {
+                    $(this).addClass("active");
+                }
+            });
+        });
+    });
+</script>
+<script src="/js/auth.js"></script>
+
+</body>
+</html>

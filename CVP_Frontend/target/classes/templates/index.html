@@ -1,0 +1,1397 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Community Volunteering Platform</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+    />
+    <style>
+      :root {
+        --primary: #981fa1;
+        --primary-light: #b535bf;
+        --primary-dark: #7a1882;
+        --secondary: #ffd700;
+        --text-dark: #333333;
+        --text-light: #ffffff;
+        --bg-light: #f8f9fa;
+        --bg-dark: #212529;
+        --transition: all 0.3s ease-in-out;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        scroll-behavior: smooth;
+      }
+
+      body {
+        font-family: "Poppins", sans-serif;
+        background-color: var(--bg-light);
+        color: var(--text-dark);
+        overflow-x: hidden;
+        /* background: url('images/background.jpg') no-repeat center center fixed;
+            background-size: cover; */
+      }
+
+      /* Splash Screen */
+      #splash-screen {
+        position: fixed;
+        width: 100%;
+        height: 100vh;
+        background: var(--primary);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        color: var(--text-light);
+        z-index: 2000;
+        transition: opacity 0.5s ease-in-out;
+      }
+
+      #splash-screen .logo {
+        font-size: 3rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+        letter-spacing: 2px;
+      }
+
+      #splash-screen .loader {
+        width: 150px;
+        height: 5px;
+        background: rgba(255, 255, 255, 0.3);
+        border-radius: 5px;
+        overflow: hidden;
+        position: relative;
+      }
+
+      #splash-screen .loader::before {
+        content: "";
+        position: absolute;
+        width: 40%;
+        height: 100%;
+        background: var(--text-light);
+        border-radius: 5px;
+        animation: loading 2s infinite ease-in-out;
+      }
+
+      @keyframes loading {
+        0% {
+          left: -40%;
+        }
+
+        100% {
+          left: 100%;
+        }
+      }
+
+      /* Navbar */
+      .navbar {
+        position: fixed;
+        width: 100%;
+        top: 0;
+        z-index: 1000;
+        background: var(--primary);
+        padding: 15px 0;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        transition: var(--transition);
+      }
+
+      .navbar.scrolled {
+        padding: 10px 0;
+        background: rgba(152, 31, 161, 0.95);
+        backdrop-filter: blur(10px);
+      }
+
+      .navbar-brand {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--text-light) !important;
+        transition: var(--transition);
+      }
+
+      .nav-link {
+        font-size: 1.1rem;
+        font-weight: 500;
+        padding: 10px 20px;
+        color: var(--text-light) !important;
+        position: relative;
+        transition: var(--transition);
+      }
+
+      .nav-link::after {
+        content: "";
+        position: absolute;
+        width: 0;
+        height: 2px;
+        background: var(--secondary);
+        bottom: 5px;
+        left: 50%;
+        transform: translateX(-50%);
+        transition: var(--transition);
+      }
+
+      .nav-link:hover::after {
+        width: 70%;
+      }
+
+      .dropdown-menu {
+        background: var(--bg-dark);
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        overflow: hidden;
+        margin-top: 10px;
+      }
+
+      .dropdown-item {
+        color: var(--text-light);
+        padding: 10px 20px;
+        transition: var(--transition);
+      }
+
+      .dropdown-item:hover {
+        background: var(--primary);
+        color: var(--text-light);
+        transform: translateX(5px);
+      }
+
+      /* Hero Section */
+      .hero-section {
+        position: relative;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+          url("images/background.jpg") no-repeat center center;
+        background-size: cover;
+        background-attachment: fixed;
+        padding: 20px;
+        color: var(--text-light);
+        /* background: url('background.jpg') no-repeat center center fixed; */
+      }
+
+      .hero-content {
+        max-width: 800px;
+        opacity: 0;
+        transform: translateY(30px);
+        animation: fadeInUp 1s forwards 0.5s;
+      }
+
+      @keyframes fadeInUp {
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .hero-section h1 {
+        font-size: 3.5rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        margin-bottom: 20px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+      }
+
+      .hero-section p {
+        font-size: 1.5rem;
+        margin-bottom: 30px;
+        text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+      }
+
+      .btn-custom {
+        font-size: 1.1rem;
+        font-weight: 600;
+        padding: 12px 30px;
+        border-radius: 50px;
+        background: var(--primary);
+        border: 2px solid var(--primary);
+        color: var(--text-light);
+        transition: var(--transition);
+        position: relative;
+        overflow: hidden;
+        z-index: 1;
+      }
+
+      .btn-custom::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 0%;
+        height: 100%;
+        background: var(--text-light);
+        transition: var(--transition);
+        z-index: -1;
+      }
+
+      .btn-custom:hover {
+        color: var(--primary);
+      }
+
+      .btn-custom:hover::before {
+        width: 100%;
+      }
+
+      .btn-outline {
+        background: transparent;
+        border: 2px solid var(--text-light);
+        margin-left: 15px;
+      }
+
+      .btn-outline:hover {
+        border-color: var(--text-light);
+      }
+
+      .scroll-down {
+        position: absolute;
+        bottom: 30px;
+        left: 50%;
+        transform: translateX(-50%);
+        color: var(--text-light);
+        font-size: 2rem;
+        animation: bounce 2s infinite;
+        cursor: pointer;
+      }
+
+      @keyframes bounce {
+        0%,
+        20%,
+        50%,
+        80%,
+        100% {
+          transform: translateY(0) translateX(-50%);
+        }
+
+        40% {
+          transform: translateY(-20px) translateX(-50%);
+        }
+
+        60% {
+          transform: translateY(-10px) translateX(-50%);
+        }
+      }
+
+      /* Section Styling */
+      section {
+        padding: 80px 0;
+        position: relative;
+      }
+
+      .section-title {
+        text-align: center;
+        margin-bottom: 50px;
+        position: relative;
+      }
+
+      .section-title h2 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: var(--primary);
+        margin-bottom: 20px;
+        text-transform: uppercase;
+      }
+
+      .section-title p {
+        max-width: 700px;
+        margin: 0 auto;
+        color: var(--text-dark);
+        font-size: 1.1rem;
+      }
+
+      .section-title::after {
+        content: "";
+        position: absolute;
+        width: 80px;
+        height: 4px;
+        background: var(--primary);
+        bottom: -15px;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+
+      /* About Section */
+      #about-section {
+        background: var(--bg-light);
+        overflow: hidden;
+      }
+
+      .about-carousel .carousel-item {
+        padding: 20px;
+      }
+
+      .about-carousel .carousel-item img {
+        height: 400px;
+        object-fit: cover;
+        border-radius: 10px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      }
+
+      .about-content {
+        padding: 30px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        height: 100%;
+      }
+
+      .about-content h3 {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--primary);
+        margin-bottom: 20px;
+      }
+
+      .about-content p {
+        font-size: 1.1rem;
+        line-height: 1.8;
+        margin-bottom: 20px;
+      }
+
+      .carousel-control-prev,
+      .carousel-control-next {
+        width: 50px;
+        height: 50px;
+        background: var(--primary);
+        border-radius: 50%;
+        opacity: 1;
+        top: 50%;
+        transform: translateY(-50%);
+      }
+
+      .carousel-control-prev {
+        left: 20px;
+      }
+
+      .carousel-control-next {
+        right: 20px;
+      }
+
+      .carousel-indicators {
+        bottom: -50px;
+      }
+
+      .carousel-indicators button {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background-color: var(--primary);
+        opacity: 0.5;
+      }
+
+      .carousel-indicators .active {
+        opacity: 1;
+      }
+
+      /* Opportunities Section */
+      /* Opportunities Section */
+      .opportunities-section {
+        background: linear-gradient(to right, #f8f9fa, #e9ecef);
+        padding: 50px 0;
+        text-align: center;
+        overflow: hidden;
+      }
+
+      .opportunities-wrapper {
+        overflow: hidden;
+        position: relative;
+      }
+
+      .opportunities-container {
+        display: flex;
+        width: max-content;
+        gap: 40px;
+        animation: scrollOpportunities 30s linear infinite;
+        /* Adjusted duration for smoothness */
+      }
+
+      .opportunity {
+        flex: 0 0 auto;
+        width: 300px;
+        background: #fff;
+        border-radius: 15px;
+        padding: 20px;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        min-height: 400px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s;
+        overflow: hidden;
+      }
+
+      .opportunity:hover {
+        transform: translateY(-10px);
+      }
+
+      .opportunity h3 {
+        margin-top: 10px;
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: var(--primary);
+      }
+
+      .opportunity p {
+        flex-grow: 1;
+        margin: 15px 0;
+        color: var(--text-dark);
+        word-wrap: break-word;
+        white-space: normal;
+        font-size: 1rem;
+        line-height: 1.4;
+      }
+
+      .opportunity .btn-custom {
+        background: var(--primary);
+        color: #fff;
+        padding: 8px 15px;
+        border-radius: 50px;
+        text-decoration: none;
+        font-size: 1rem;
+      }
+
+      .opportunity .btn-custom:hover {
+        background: #fff;
+        color: var(--primary);
+      }
+
+      .opportunity img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        border-radius: 10px;
+        transition: transform 0.3s;
+      }
+
+      .opportunity:hover img {
+        transform: scale(1.05);
+      }
+
+      @keyframes scrollOpportunities {
+        0% {
+          transform: translateX(0);
+        }
+
+        100% {
+          transform: translateX(-50%);
+          /* Move only half the total width since content is duplicated */
+        }
+      }
+
+      .opportunities-container:hover {
+        animation-play-state: paused;
+      }
+
+      /* Responsive Styles */
+      @media (max-width: 768px) {
+        .opportunities-wrapper {
+          overflow-x: auto;
+          padding-bottom: 20px;
+        }
+
+        .opportunities-container {
+          animation: none;
+          width: auto;
+          flex-wrap: nowrap;
+          justify-content: flex-start;
+          padding: 0 15px;
+        }
+      }
+
+      /* Contact Section */
+      .contact-section {
+        background: var(--bg-light);
+        padding: 80px 0;
+      }
+
+      .contact-info {
+        margin-bottom: 30px;
+      }
+
+      .contact-item {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      .contact-icon {
+        width: 50px;
+        height: 50px;
+        background: var(--primary);
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-right: 15px;
+        color: var(--text-light);
+        font-size: 1.2rem;
+        flex-shrink: 0;
+      }
+
+      .contact-details h4 {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: var(--primary);
+        margin-bottom: 5px;
+      }
+
+      .contact-details p,
+      .contact-details a {
+        font-size: 1rem;
+        color: var(--text-dark);
+        text-decoration: none;
+        transition: var(--transition);
+      }
+
+      .contact-details a:hover {
+        color: var(--primary);
+      }
+
+      .contact-form {
+        background: var(--text-light);
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      .form-control {
+        height: 50px;
+        padding: 0 15px;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        font-size: 1rem;
+        transition: var(--transition);
+      }
+
+      .form-control:focus {
+        border-color: var(--primary);
+        box-shadow: none;
+      }
+
+      textarea.form-control {
+        height: 120px;
+        padding: 15px;
+        resize: none;
+      }
+
+      .social-links {
+        display: flex;
+        margin-top: 20px;
+      }
+
+      .social-link {
+        width: 40px;
+        height: 40px;
+        background: var(--primary);
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: var(--text-light);
+        font-size: 1rem;
+        margin-right: 10px;
+        transition: var(--transition);
+      }
+
+      .social-link:hover {
+        background: var(--primary-dark);
+        transform: translateY(-5px);
+      }
+
+      /* Footer */
+      .footer {
+        background: var(--bg-dark);
+        color: var(--text-light);
+        padding: 30px 0;
+        text-align: center;
+      }
+
+      .footer h2 {
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin-bottom: 15px;
+        color: var(--text-light);
+      }
+
+      .footer p {
+        margin-bottom: 10px;
+      }
+
+      .footer a {
+        color: var(--primary);
+        text-decoration: none;
+        transition: var(--transition);
+      }
+
+      .footer a:hover {
+        color: var(--primary-light);
+        text-decoration: underline;
+      }
+
+      .footer-links {
+        display: flex;
+        justify-content: center;
+        margin: 15px 0;
+      }
+
+      .footer-links a {
+        color: var(--text-light);
+        margin: 0 15px;
+        font-size: 1rem;
+        transition: var(--transition);
+      }
+
+      .footer-links a:hover {
+        color: var(--primary);
+        text-decoration: none;
+      }
+
+      .footer-bottom {
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      /* Back to Top Button */
+      .back-to-top {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        width: 45px;
+        height: 45px;
+        background: var(--primary);
+        color: var(--text-light);
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 1.2rem;
+        cursor: pointer;
+        opacity: 0;
+        visibility: hidden;
+        transition: var(--transition);
+        z-index: 999;
+      }
+
+      .back-to-top.active {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      /* Responsive Styles */
+      @media (max-width: 992px) {
+        .hero-section h1 {
+          font-size: 3rem;
+        }
+
+        .hero-section p {
+          font-size: 1.2rem;
+        }
+
+        .section-title h2 {
+          font-size: 2.2rem;
+        }
+
+        .about-carousel .carousel-item img {
+          height: 300px;
+        }
+
+        .about-content h3 {
+          font-size: 1.8rem;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .navbar-brand {
+          font-size: 1.5rem;
+        }
+
+        .hero-section h1 {
+          font-size: 2.5rem;
+        }
+
+        .hero-section p {
+          font-size: 1.1rem;
+        }
+
+        .btn-custom {
+          font-size: 1rem;
+          padding: 10px 25px;
+        }
+
+        .section-title h2 {
+          font-size: 2rem;
+        }
+
+        .about-carousel .carousel-item img {
+          height: 250px;
+          margin-bottom: 20px;
+        }
+
+        .opportunities-wrapper {
+          overflow-x: auto;
+          padding-bottom: 20px;
+        }
+
+        .opportunities-container {
+          animation: none;
+          width: auto;
+          flex-wrap: nowrap;
+          justify-content: flex-start;
+          padding: 0 15px;
+        }
+
+        .contact-form {
+          margin-top: 30px;
+        }
+      }
+
+      @media (max-width: 576px) {
+        .hero-section h1 {
+          font-size: 2rem;
+        }
+
+        .hero-section p {
+          font-size: 1rem;
+        }
+
+        .btn-custom {
+          font-size: 0.9rem;
+          padding: 8px 20px;
+        }
+
+        .btn-outline {
+          margin-left: 10px;
+        }
+
+        .section-title h2 {
+          font-size: 1.8rem;
+        }
+
+        .about-content h3 {
+          font-size: 1.5rem;
+        }
+
+        .about-content p {
+          font-size: 1rem;
+        }
+
+        .opportunity {
+          width: 260px;
+          min-height: 380px;
+        }
+
+        .opportunity h3 {
+          font-size: 1.2rem;
+        }
+
+        .opportunity p {
+          font-size: 0.9rem;
+          flex-grow: 1;
+          margin-bottom: 10px;
+        }
+
+        .opportunity img {
+          height: 180px;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Splash Screen -->
+    <div id="splash-screen">
+      <div class="logo">Community Volunteering</div>
+      <div class="loader"></div>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+      <div class="container">
+        <a class="navbar-brand" href="#">Community Volunteering</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item"><a class="nav-link" href="#home">Home</a></li>
+            <li class="nav-item">
+              <a class="nav-link" href="#about">About</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#opportunities">Opportunities</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#contact">Contact</a>
+            </li>
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                id="loginDropdown"
+                role="button"
+                data-bs-toggle="dropdown"
+                >Login</a
+              >
+              <ul class="dropdown-menu">
+                <li>
+                  <a class="dropdown-item" th:href="@{/auth/volunteers/login}"
+                    >As a Volunteer</a
+                  >
+                </li>
+                <li>
+                  <a class="dropdown-item" th:href="@{/auth/organizer}"
+                    >As an Organization</a
+                  >
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section" id="home">
+      <div class="container">
+        <div class="hero-content">
+          <h1>Make a Difference Today</h1>
+          <p>
+            Join our community of volunteers and contribute to a better world!
+          </p>
+          <div class="hero-buttons">
+            <a href="#opportunities" class="btn btn-custom"
+              >Explore Opportunities</a
+            >
+            <a href="#about" class="btn btn-custom btn-outline">Learn More</a>
+          </div>
+        </div>
+      </div>
+      <a href="#about" class="scroll-down">
+        <i class="fas fa-chevron-down"></i>
+      </a>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about-section">
+      <div class="container">
+        <div class="section-title">
+          <h2>About Us</h2>
+          <p>
+            Learn more about our mission and how we're making a difference in
+            communities worldwide.
+          </p>
+        </div>
+
+        <div
+          id="aboutCarousel"
+          class="carousel slide about-carousel"
+          data-bs-ride="carousel"
+          data-bs-interval="5000"
+        >
+          <div class="carousel-inner">
+            <!-- Slide 1 -->
+            <div class="carousel-item active">
+              <div class="row align-items-center">
+                <div class="col-lg-6">
+                  <img
+                    th:src="@{images/volunteer-simple.jpg}"
+                    class="d-block w-100"
+                    alt="Volunteering Made Simple"
+                  />
+                </div>
+                <div class="col-lg-6">
+                  <div class="about-content">
+                    <h3>Volunteering Made Simple</h3>
+                    <p>
+                      Our Community Volunteer System is a one-stop platform that
+                      connects individuals with organizations in need of helping
+                      hands. Whether you're looking to support education,
+                      environmental initiatives, healthcare, or social welfare,
+                      we provide tailored opportunities that match your skills
+                      and interests.
+                    </p>
+                    <p>
+                      Join us in making a lasting impact on communities
+                      worldwide!
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Slide 2 -->
+            <div class="carousel-item">
+              <div class="row align-items-center">
+                <div class="col-lg-6">
+                  <img
+                    th:src="@{images/why-volunteer.jpg}"
+                    class="d-block w-100"
+                    alt="Why Volunteer"
+                  />
+                </div>
+                <div class="col-lg-6">
+                  <div class="about-content">
+                    <h3>Why Volunteer?</h3>
+                    <p>
+                      Volunteering is more than just giving time—it's about
+                      creating meaningful change. By dedicating even a few
+                      hours, you can uplift lives, strengthen communities, and
+                      contribute to a better world.
+                    </p>
+                    <p>
+                      Whether you're a student, a professional, or a retiree,
+                      every effort counts. Start today and experience the joy of
+                      giving back!
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Slide 3 -->
+            <div class="carousel-item">
+              <div class="row align-items-center">
+                <div class="col-lg-6">
+                  <img
+                    th:src="@{images/getting-started.jpg}"
+                    class="d-block w-100"
+                    alt="Getting Started"
+                  />
+                </div>
+                <div class="col-lg-6">
+                  <div class="about-content">
+                    <h3>Getting Started is Easy!</h3>
+                    <p>
+                      Sign up, browse opportunities, and choose the ones that
+                      fit your passion. Track your impact, connect with
+                      like-minded volunteers, and build a network of
+                      change-makers.
+                    </p>
+                    <p>
+                      With flexible options for online and in-person
+                      volunteering, you can make a difference anytime, anywhere!
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Slide 4 -->
+            <div class="carousel-item">
+              <div class="row align-items-center">
+                <div class="col-lg-6">
+                  <img
+                    th:src="@{images/community-changemakers.jpg}"
+                    class="d-block w-100"
+                    alt="Community of Changemakers"
+                  />
+                </div>
+                <div class="col-lg-6">
+                  <div class="about-content">
+                    <h3>Join a Community of Changemakers</h3>
+                    <p>
+                      You're not alone in your mission to help others. Join a
+                      diverse community of volunteers, non-profits, and
+                      organizations working together for a common goal.
+                    </p>
+                    <p>
+                      Share experiences, inspire others, and collaborate on
+                      projects that leave a lasting legacy. Together, we can
+                      create a brighter future!
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <button
+            class="carousel-control-prev"
+            type="button"
+            data-bs-target="#aboutCarousel"
+            data-bs-slide="prev"
+          >
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+          </button>
+          <button
+            class="carousel-control-next"
+            type="button"
+            data-bs-target="#aboutCarousel"
+            data-bs-slide="next"
+          >
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+          </button>
+
+          <div class="carousel-indicators">
+            <button
+              type="button"
+              data-bs-target="#aboutCarousel"
+              data-bs-slide-to="0"
+              class="active"
+            ></button>
+            <button
+              type="button"
+              data-bs-target="#aboutCarousel"
+              data-bs-slide-to="1"
+            ></button>
+            <button
+              type="button"
+              data-bs-target="#aboutCarousel"
+              data-bs-slide-to="2"
+            ></button>
+            <button
+              type="button"
+              data-bs-target="#aboutCarousel"
+              data-bs-slide-to="3"
+            ></button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Opportunities Section -->
+    <section id="opportunities" class="opportunities-section">
+      <div class="container">
+        <div class="section-title">
+          <h2>Volunteer Opportunities</h2>
+          <p>
+            Discover meaningful ways to contribute and make a positive impact in
+            your community.
+          </p>
+        </div>
+
+        <div class="opportunities-wrapper">
+          <div class="opportunities-container">
+            <!-- First set of opportunities -->
+            <div class="opportunity">
+              <img th:src="@{images/tree.jpg}" alt="Tree Plantation" />
+              <h3>Tree Plantation</h3>
+              <p>Join us in planting trees to save the environment.</p>
+              <a href="#" class="btn btn-custom">Get Details</a>
+            </div>
+
+            <div class="opportunity">
+              <img th:src="@{images/blood.png}" alt="Blood Donation" />
+              <h3>Blood Donation</h3>
+              <p>Help save lives by donating blood to those in need.</p>
+              <a href="#" class="btn btn-custom">Get Details</a>
+            </div>
+
+            <div class="opportunity">
+              <img th:src="@{images/beach.jpg}" alt="Beach Cleanup" />
+              <h3>Beach Cleanup</h3>
+              <p>Help clean the beach and protect marine life.</p>
+              <a href="#" class="btn btn-custom">Get Details</a>
+            </div>
+
+            <div class="opportunity">
+              <img th:src="@{images/senior.jpg}" alt="Serve Senior Citizens" />
+              <h3>Serve Senior Citizens</h3>
+              <p>
+                Volunteer to assist senior citizens in your community with daily
+                activities and companionship.
+              </p>
+              <a href="#" class="btn btn-custom">Get Details</a>
+            </div>
+
+            <div class="opportunity">
+              <img th:src="@{images/animal.jpg}" alt="Animal Care" />
+              <h3>Animal Care</h3>
+              <p>Help take care of stray animals and provide shelter.</p>
+              <a href="#" class="btn btn-custom">Get Details</a>
+            </div>
+
+            <!-- Duplicate set of opportunities for continuous scrolling -->
+            <div class="opportunity">
+              <img th:src="@{images/tree.jpg}" alt="Tree Plantation" />
+              <h3>Tree Plantation</h3>
+              <p>Join us in planting trees to save the environment.</p>
+              <a href="#" class="btn btn-custom">Get Details</a>
+            </div>
+
+            <div class="opportunity">
+              <img th:src="@{images/blood.png}" alt="Blood Donation" />
+              <h3>Blood Donation</h3>
+              <p>Help save lives by donating blood to those in need.</p>
+              <a href="#" class="btn btn-custom">Get Details</a>
+            </div>
+
+            <div class="opportunity">
+              <img th:src="@{images/beach.jpg}" alt="Beach Cleanup" />
+              <h3>Beach Cleanup</h3>
+              <p>Help clean the beach and protect marine life.</p>
+              <a href="#" class="btn btn-custom">Get Details</a>
+            </div>
+
+            <div class="opportunity">
+              <img th:src="@{images/senior.jpg}" alt="Serve Senior Citizens" />
+              <h3>Serve Senior Citizens</h3>
+              <p>
+                Volunteer to assist senior citizens in your community with daily
+                activities and companionship.
+              </p>
+              <a href="#" class="btn btn-custom">Get Details</a>
+            </div>
+
+            <div class="opportunity">
+              <img th:src="@{images/animal.jpg}" alt="Animal Care" />
+              <h3>Animal Care</h3>
+              <p>Help take care of stray animals and provide shelter.</p>
+              <a href="#" class="btn btn-custom">Get Details</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact-section">
+      <div class="container">
+        <div class="section-title">
+          <h2>Contact Us</h2>
+          <p>
+            Have questions or need more information? Get in touch with our team.
+          </p>
+        </div>
+
+        <div class="row">
+          <div class="col-lg-5">
+            <div class="contact-info">
+              <div class="contact-item">
+                <div class="contact-icon">
+                  <i class="fas fa-map-marker-alt"></i>
+                </div>
+                <div class="contact-details">
+                  <h4>Our Location</h4>
+                  <p>123 Volunteer Street, Community City, Country</p>
+                </div>
+              </div>
+
+              <div class="contact-item">
+                <div class="contact-icon">
+                  <i class="fas fa-envelope"></i>
+                </div>
+                <div class="contact-details">
+                  <h4>Email Us</h4>
+                  <p>
+                    <a href="mailto:info@communityvolunteering.org"
+                      >info@communityvolunteering.org</a
+                    >
+                  </p>
+                </div>
+              </div>
+
+              <div class="contact-item">
+                <div class="contact-icon">
+                  <i class="fas fa-phone-alt"></i>
+                </div>
+                <div class="contact-details">
+                  <h4>Call Us</h4>
+                  <p><a href="tel:+911234567890">+91 1234567890</a></p>
+                </div>
+              </div>
+
+              <div class="social-links">
+                <a href="#" class="social-link"
+                  ><i class="fab fa-facebook-f"></i
+                ></a>
+                <a href="#" class="social-link"
+                  ><i class="fab fa-twitter"></i
+                ></a>
+                <a href="#" class="social-link"
+                  ><i class="fab fa-instagram"></i
+                ></a>
+                <a href="#" class="social-link"
+                  ><i class="fab fa-linkedin-in"></i
+                ></a>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-7">
+            <div class="contact-form">
+              <form id="contact-form">
+                <div class="row">
+                  <div class="col-md-6 form-group">
+                    <input
+                      type="text"
+                      class="form-control"
+                      placeholder="Your Name"
+                      required
+                    />
+                  </div>
+                  <div class="col-md-6 form-group">
+                    <input
+                      type="email"
+                      class="form-control"
+                      placeholder="Your Email"
+                      required
+                    />
+                  </div>
+                </div>
+                <div class="form-group">
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Subject"
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <textarea
+                    class="form-control"
+                    placeholder="Your Message"
+                    required
+                  ></textarea>
+                </div>
+                <div class="text-center">
+                  <button type="submit" class="btn btn-custom">
+                    Send Message
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="footer" class="footer">
+      <div class="container">
+        <h2>Community Volunteering</h2>
+        <p>
+          Email:
+          <a href="mailto:info@communityvolunteering.org"
+            >info@communityvolunteering.org</a
+          >
+        </p>
+        <p>Phone: +91 1234567890</p>
+        <p>Address: 123 Volunteer Street, Community City, Country</p>
+
+        <div class="footer-links">
+          <a href="#home">Home</a>
+          <a href="#about">About</a>
+          <a href="#opportunities">Opportunities</a>
+          <a href="#contact">Contact</a>
+        </div>
+
+        <div class="footer-bottom">
+          <p>&copy; 2025 Community Volunteering. All Rights Reserved.</p>
+        </div>
+      </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <a href="#" class="back-to-top">
+      <i class="fas fa-arrow-up"></i>
+    </a>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      // Splash Screen
+      setTimeout(function () {
+        document.getElementById("splash-screen").style.opacity = "0";
+        setTimeout(function () {
+          document.getElementById("splash-screen").style.display = "none";
+        }, 500);
+      }, 3000);
+
+      // Navbar Scroll
+      window.addEventListener("scroll", function () {
+        const navbar = document.querySelector(".navbar");
+        if (window.scrollY > 50) {
+          navbar.classList.add("scrolled");
+        } else {
+          navbar.classList.remove("scrolled");
+        }
+
+        // Back to Top Button
+        const backToTop = document.querySelector(".back-to-top");
+        if (window.scrollY > 300) {
+          backToTop.classList.add("active");
+        } else {
+          backToTop.classList.remove("active");
+        }
+      });
+
+      // Smooth Scrolling
+      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener("click", function (e) {
+          e.preventDefault();
+
+          const targetId = this.getAttribute("href");
+          if (targetId === "#") return;
+
+          const targetElement = document.querySelector(targetId);
+          if (targetElement) {
+            window.scrollTo({
+              top: targetElement.offsetTop - 80,
+              behavior: "smooth",
+            });
+
+            // Close mobile menu if open
+            const navbarCollapse = document.querySelector(".navbar-collapse");
+            if (navbarCollapse.classList.contains("show")) {
+              navbarCollapse.classList.remove("show");
+            }
+          }
+        });
+      });
+
+      // Form Submission
+      document
+        .getElementById("contact-form")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+          alert("Thank you for your message! We will get back to you soon.");
+          this.reset();
+        });
+
+      // Mobile Responsive Fix for Opportunities
+      function checkMobile() {
+        if (window.innerWidth <= 768) {
+          const container = document.querySelector(".opportunities-container");
+          if (container) {
+            container.style.animation = "none";
+          }
+        } else {
+          const container = document.querySelector(".opportunities-container");
+          if (container) {
+            container.style.animation =
+              "scrollOpportunities 20s linear infinite";
+          }
+        }
+      }
+
+      window.addEventListener("load", checkMobile);
+      window.addEventListener("resize", checkMobile);
+    </script>
+    <script src="/js/auth.js"></script>
+  </body>
+</html>

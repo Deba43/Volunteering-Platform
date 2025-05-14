@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Rate Your Experience</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Bootstrap & Google Fonts -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      body,
+      html {
+        font-family: "Poppins", sans-serif;
+        background: url("background.jpg") no-repeat center center fixed;
+        background-size: cover;
+        color: #fff;
+        height: 100%;
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .navbar {
+        position: fixed;
+        width: 100%;
+        top: 0;
+        z-index: 1000;
+        background: #981fa1;
+        padding: 15px 0;
+      }
+
+      .navbar-brand {
+        font-size: 1.8rem;
+        font-weight: bold;
+      }
+
+      .nav-link {
+        font-size: 1.2rem;
+        padding: 10px 20px;
+        color: #fff;
+      }
+
+      .nav-link:hover {
+        color: #f9ad55;
+      }
+
+      .form-container {
+        max-width: 500px;
+        width: 100%;
+        padding: 40px;
+        background: rgba(0, 0, 0, 0.8);
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        text-align: center;
+        animation: fadeIn 1s ease-in-out;
+        margin-top: 100px;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(-20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .stars {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        font-size: 2rem;
+        color: rgba(255, 255, 255, 0.3);
+        cursor: pointer;
+        margin-bottom: 15px;
+      }
+
+      .star.selected {
+        color: gold;
+      }
+
+      textarea {
+        width: 100%;
+        padding: 15px;
+        border-radius: 12px;
+        border: none;
+        resize: none;
+        background: rgba(255, 255, 255, 0.1);
+        color: #fff;
+        margin-bottom: 20px;
+      }
+
+      textarea::placeholder {
+        color: rgba(255, 255, 255, 0.7);
+      }
+
+      .btn-custom {
+        font-size: 1.2rem;
+        padding: 15px 30px;
+        border-radius: 50px;
+        background: #981fa1;
+        border: none;
+        color: #fff;
+        width: 100%;
+        transition: all 0.3s ease;
+      }
+
+      .btn-custom:hover {
+        background: #f9ad55;
+        transform: translateY(-3px);
+      }
+
+      .selected-rating {
+        font-weight: 500;
+        margin-bottom: 15px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+      <div class="container">
+        <a class="navbar-brand" href="#">Community Volunteering</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div
+          class="collapse navbar-collapse justify-content-end"
+          id="navbarNav"
+        >
+          <ul class="navbar-nav">
+            <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+
+            <li class="nav-item">
+              <a
+                class="nav-link"
+                th:href="@{/users/profile/{id}(id=${session.loggedInUser.id})}"
+                >User Profile</a
+              >
+            </li>
+            <li class="nav-item"><a class="nav-link" href="/">Logout</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Rating Form -->
+    <div class="form-container">
+      <h2>Rate Your Experience</h2>
+
+      <form th:action="@{/ratings/submit}" th:object="${rating}" method="post">
+        <input type="hidden" th:field="*{taskId}" />
+        <input type="hidden" th:field="*{userId}" />
+
+        <!-- Star Rating System -->
+        <div class="stars" id="starsContainer">
+          <span class="star" data-value="1">&#9733;</span>
+          <span class="star" data-value="2">&#9733;</span>
+          <span class="star" data-value="3">&#9733;</span>
+          <span class="star" data-value="4">&#9733;</span>
+          <span class="star" data-value="5">&#9733;</span>
+        </div>
+
+        <input
+          type="hidden"
+          th:field="*{ratingValue}"
+          id="ratingValue"
+          required
+        />
+        <p class="selected-rating">
+          Selected Rating: <span id="ratingText">0/5</span>
+        </p>
+
+        <!-- Review Text -->
+        <textarea
+          th:field="*{review}"
+          id="review"
+          rows="4"
+          placeholder="Share your experience..."
+          required
+        ></textarea>
+
+        <button type="submit" class="btn btn-custom">Add Rating</button>
+      </form>
+    </div>
+
+    <!-- Bootstrap + Script -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      const stars = document.querySelectorAll(".star");
+      const ratingInput = document.getElementById("ratingValue");
+      const ratingText = document.getElementById("ratingText");
+
+      stars.forEach((star) => {
+        star.addEventListener("click", function () {
+          let value = this.getAttribute("data-value");
+          ratingInput.value = value;
+          ratingText.innerText = value + "/5";
+
+          stars.forEach((s) => s.classList.remove("selected"));
+          for (let i = 0; i < value; i++) {
+            stars[i].classList.add("selected");
+          }
+        });
+      });
+    </script>
+    <script src="/js/auth.js"></script>
+  </body>
+</html>

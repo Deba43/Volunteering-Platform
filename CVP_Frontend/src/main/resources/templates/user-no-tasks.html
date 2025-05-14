@@ -1,0 +1,39 @@
+<!-- templates/user-no-tasks.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>No Tasks Found</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 50px;
+    }
+    .container {
+      background: #f8d7da;
+      padding: 20px;
+      border-radius: 10px;
+      display: inline-block;
+      box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+    }
+    h2 {
+      color: #721c24;
+    }
+    a {
+      text-decoration: none;
+      background: #007bff;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>No tasks signed up yet!</h2>
+    <p>You haven't signed up for any volunteering tasks yet.</p>
+    <a href="/tasksignup/form">Sign up for tasks</a>
+  </div>
+  <script src="/js/auth.js"></script>
+</body>
+</html>

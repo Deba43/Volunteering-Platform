@@ -1,0 +1,242 @@
+
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Organization Profile</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #9933CC;
+            --secondary-color: #f8eeff;
+            --hover-color: #e9d5ff;
+            --btn-color: #6c63ff;
+            --danger-color: #ff4d4d;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        .header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-nav .nav-item .nav-links {
+            color: white;
+            font-weight: bold;
+            padding: 10px 15px;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+
+        .navbar-nav .nav-item .nav-links:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+        }
+
+        .sidebar {
+            background-color: var(--secondary-color);
+            min-height: 100vh;
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar-item {
+            padding: 12px 20px;
+            border-bottom: 1px solid #e9d5ff;
+            transition: all 0.2s ease;
+        }
+
+        .sidebar-item.active {
+            background-color: var(--hover-color);
+            font-weight: bold;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .sidebar-item:hover {
+            background-color: var(--hover-color);
+            cursor: pointer;
+            transform: translateX(5px);
+        }
+
+        .main-content {
+            padding: 30px;
+        }
+
+        .card {
+            max-width: 700px;
+            margin: auto;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+        }
+
+        .btn-custom {
+            width: 100%;
+            margin-top: 10px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .btn-custom:hover {
+            opacity: 0.9;
+        }
+
+        .btn-warning, .btn-danger {
+            font-size: 16px;
+        }
+
+        .profile-info p {
+            font-size: 18px;
+            margin: 10px 0;
+        }
+
+        .profile-info strong {
+            color: var(--primary-color);
+        }
+
+        /* Avatar Style */
+        .avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin: 0 auto;
+            display: block;
+            /* border: 3px solid var(--primary-color); */
+        }
+
+        /* Button Row Style */
+        .button-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header .container .row {
+                flex-direction: column;
+                text-align: center;
+            }
+            .sidebar {
+                min-height: auto;
+                margin-bottom: 20px;
+            }
+            .button-row {
+                flex-direction: column;
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<div class="header">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-3">
+                <h3 class="mb-0">
+        
+                </h3>
+            </div>
+            <div class="col-md-7">
+                <nav class="navbar navbar-expand">
+                    <ul class="navbar-nav mx-auto">
+                        <li class="nav-item"><a class="nav-links" th:href="@{/}">Home</a></li>
+                        <li class="nav-item">
+							<a th:if="${session.loggedInOrganization != null}" 
+							                    th:href="@{/organization/{id}/tasks(id=${session.loggedInOrganization.id})}" 
+							                    class="nav-links">
+							                         Manage Event
+							                    </a>
+					
+						</li>
+                        <li class="nav-item"><a class="nav-links" th:href="@{/createTasks}">Add Event</a></li>
+                       
+                    </ul>
+                </nav>
+            </div>
+            <div class="col-md-2 text-end">
+                <a th:href="@{/auth/logout}" class="btn btn-danger">Log Out</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Sidebar & Main Content -->
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-2 sidebar">
+            <div class="sidebar-item active">
+                <a th:href="@{/organization/profile/{id}(id=${org.id})}" 
+                class="text-decoration-none text-dark">
+                    <i class="fas fa-user-circle me-2"></i> View Profile
+                </a>
+            </div>
+            <div class="sidebar-item">
+				
+				<a th:if="${session.loggedInOrganization != null}" 
+				                    th:href="@{/organization/{id}/tasks(id=${session.loggedInOrganization.id})}" 
+				                    class="text-decoration-none text-dark">
+				                        <i  class="fas fa-calendar-alt me-2">></i> Manage Events
+				                    </a>
+                
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-md-10 main-content">
+            <div class="card text-center">
+                <!-- Avatar at top center -->
+                <img src="https://img.freepik.com/free-vector/blue-circle-with-white-user_78370-4707.jpg?t=st=1743529875~exp=1743533475~hmac=874d6cc4e4a1a724543d5747b4024860c8ad91aa5cd186efdc29072c8d06edb1&w=826" alt="Avatar" class="avatar">
+                
+                <h3 class="mb-3">Organization Profile</h3>
+                
+                <div class="profile-info text-start">
+                    <p><strong>Organization Name:</strong> <span th:text="${org.name}">Organization Name</span></p>
+                    <p><strong>Email:</strong> <span th:text="${org.email}">organization@example.com</span></p>
+                    <p><strong>Contact Number:</strong> <span th:text="${org.phoneNumber}">1234567890</span></p>
+                    <p><strong>Website:</strong> <span th:text="${org.website}">www.organization.com</span></p>
+                </div>
+
+                <!-- Action Buttons in single row -->
+                <div class="button-row">
+                   
+                    <a th:if="${session.loggedInOrganization != null}" 
+                        th:href="@{/organization/edit/{id}(id=${session.loggedInOrganization.id})}" 
+                        class="btn btn-warning btn-custom">
+                        <i class="fasfa-edit"></i> Edit Profile
+                    </a>
+
+                   
+                    <a th:if="${session.loggedInOrganization != null}" 
+                    th:href="@{/organization/{id}/tasks(id=${session.loggedInOrganization.id})}" 
+                    class="btn btn-primary btn-custom">
+                        <i class="fas fa-tasks"></i> View Your Tasks
+                    </a>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<script src="/js/auth.js"></script>
+
+</body>
+</html>

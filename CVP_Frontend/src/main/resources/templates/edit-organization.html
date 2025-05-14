@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Edit Organization</title>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --primary: #6366f1;
+        --primary-dark: #4f46e5;
+        --primary-light: #c7d2fe;
+        --accent: #f97316;
+        --bg-light: #eef2ff;
+        --text-dark: #1e293b;
+        --text-light: #f8fafc;
+        --shadow: 0 10px 30px rgba(99, 102, 241, 0.2);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Poppins", sans-serif;
+      }
+
+      body {
+        background: var(--bg-light);
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 2rem;
+      }
+
+      .card-container {
+        background: white;
+        padding: 3rem;
+        border-radius: 12px;
+        box-shadow: var(--shadow);
+        width: 100%;
+        max-width: 600px;
+        text-align: center;
+      }
+
+      h1 {
+        color: var(--primary-dark);
+        font-size: 2rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .form-group {
+        text-align: left;
+        margin-bottom: 1.2rem;
+      }
+
+      label {
+        font-weight: 600;
+        display: block;
+        margin-bottom: 0.5rem;
+        color: var(--text-dark);
+      }
+
+      .inputField {
+        width: 100%;
+        padding: 0.75rem;
+        border: 2px solid var(--primary-light);
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: 0.3s;
+      }
+
+      .inputField:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.3);
+      }
+
+      .submit-container {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 1.5rem;
+      }
+
+      .btn {
+        flex: 1;
+        margin: 0 0.5rem;
+        padding: 0.8rem;
+        font-size: 1rem;
+        font-weight: 600;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+        transition: all 0.3s;
+      }
+
+      #submitbtn {
+        background: var(--primary);
+        color: white;
+      }
+
+      #submitbtn:hover {
+        background: var(--primary-dark);
+        transform: translateY(-2px);
+      }
+
+      #viewOrgsbtn {
+        background: var(--accent);
+        color: white;
+      }
+
+      #viewOrgsbtn:hover {
+        opacity: 0.9;
+        transform: translateY(-2px);
+      }
+
+      @media (max-width: 600px) {
+        .submit-container {
+          flex-direction: column;
+          gap: 1rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card-container">
+      <h1>Edit Organization</h1>
+      <form
+        th:action="@{/organization/update}"
+        method="post"
+        th:object="${organization}"
+      >
+        <input type="hidden" th:field="*{id}" />
+
+        <div class="form-group">
+          <label for="name">Organization Name</label>
+          <input
+            type="text"
+            class="inputField"
+            id="name"
+            th:field="*{name}"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="website">Website</label>
+          <input
+            type="text"
+            class="inputField"
+            id="website"
+            th:field="*{website}"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="location">Location</label>
+          <input
+            type="text"
+            class="inputField"
+            id="location"
+            th:field="*{location}"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input
+            type="email"
+            class="inputField"
+            id="email"
+            th:field="*{email}"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input
+            type="password"
+            class="inputField"
+            id="password"
+            th:field="*{password}"
+            required
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="phoneNumber">Phone Number</label>
+          <input
+            type="tel"
+            class="inputField"
+            id="phoneNumber"
+            th:field="*{phoneNumber}"
+            required
+          />
+        </div>
+
+        <div class="submit-container">
+          <button class="btn" id="submitbtn" type="submit">
+            Update Organization
+          </button>
+          <button
+            class="btn"
+            id="viewOrgsbtn"
+            type="button"
+            th:attr="data-org-id=*{id}"
+          >
+            View Organizations
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <script>
+      document
+        .getElementById("viewOrgsbtn")
+        .addEventListener("click", function () {
+          const orgId = this.getAttribute("data-org-id");
+          if (orgId) {
+            window.location.href = "/organization/profile/" + orgId;
+          }
+        });
+    </script>
+    <script src="/js/auth.js"></script>
+  </body>
+</html>

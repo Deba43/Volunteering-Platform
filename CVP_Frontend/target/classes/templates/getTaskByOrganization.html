@@ -1,0 +1,237 @@
+<!-- <!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task List</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%);
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        h1 {
+            color: #6a0dad;
+            text-align: center;
+        }
+        .task-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            max-width: 1200px;
+        }
+        .task-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            width: 300px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s;
+        }
+        .task-card:hover {
+            transform: translateY(-5px);
+        }
+        .task-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #6a0dad;
+        }
+        .task-info {
+            margin: 10px 0;
+            font-size: 0.9em;
+        }
+        .badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.8em;
+        }
+        .priority-high { background: red; color: white; }
+        .priority-medium { background: orange; color: white; }
+        .priority-low { background: green; color: white; }
+        .task-footer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+        }
+        .btn {
+            margin-top: 25px;
+            padding: 8px 15px;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .btn-primary { background: #6a0dad; color: white; }
+        .btn-secondary { background: #ccc; color: black; }
+    </style>
+</head>
+<body>
+    <h1>Task List</h1>
+    <div class="task-container">
+        <div th:each="task : ${tasks}" class="task-card">
+            <div class="task-title" th:text="${task.title}"></div>
+            <div class="task-info" th:text="${task.description}"></div>
+            <div class="task-info"><strong>Location:</strong> <span th:text="${task.location}"></span></div>
+            <div class="task-info"><strong>Status:</strong> <span class="badge" th:text="${task.status}"></span></div>
+            <div class="task-info">
+                <strong>Priority:</strong>
+                <span th:class="'badge priority-' + ${task.priority.toLowerCase()}" th:text="${task.priority}"></span>
+            </div>
+            <div class="task-info"><strong>Category:</strong> <span th:text="${task.category}"></span></div>
+            <div class="task-info"><strong>Event Date:</strong> <span th:text="${task.eventDate}"></span></div>
+            <div class="task-info"><strong>End Date:</strong> <span th:text="${task.endDate}"></span></div>
+            
+        </div>
+    </div>
+    <a href="/organization/profile" class="btn btn-primary">Back</a>
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Task List</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+    <style>
+      body {
+        background: linear-gradient(135deg, #f5f3ff 0%, #ede9fe 100%);
+        font-family: Arial, sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 20px;
+      }
+      h1 {
+        color: #6a0dad;
+        text-align: center;
+      }
+      .task-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 20px;
+        max-width: 1200px;
+      }
+      .task-card {
+        background: white;
+        border-radius: 10px;
+        padding: 20px;
+        width: 300px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        transition: transform 0.3s;
+      }
+      .task-card:hover {
+        transform: translateY(-5px);
+      }
+      .task-title {
+        font-size: 1.3em;
+        font-weight: bold;
+        color: #6a0dad;
+      }
+      .task-info {
+        margin: 10px 0;
+        font-size: 0.9em;
+      }
+      .badge {
+        display: inline-block;
+        padding: 5px 10px;
+        border-radius: 5px;
+        font-size: 0.8em;
+      }
+      .priority-high {
+        background: red;
+        color: white;
+      }
+      .priority-medium {
+        background: orange;
+        color: white;
+      }
+      .priority-low {
+        background: green;
+        color: white;
+      }
+      .task-footer {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 15px;
+      }
+      .btn {
+        margin-top: 10px;
+        padding: 8px 15px;
+        text-decoration: none;
+        font-weight: bold;
+        border-radius: 5px;
+        cursor: pointer;
+        display: inline-block;
+        text-align: center;
+      }
+      .btn-primary {
+        background: #6a0dad;
+        color: white;
+      }
+      .btn-secondary {
+        background: #ccc;
+        color: black;
+      }
+      .btn-edit {
+        background: #ff9800;
+        color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Task List</h1>
+    <div class="task-container">
+      <div th:each="task : ${tasks}" class="task-card">
+        <div class="task-title" th:text="${task.title}"></div>
+        <div class="task-info" th:text="${task.description}"></div>
+        <div class="task-info">
+          <strong>Location:</strong> <span th:text="${task.location}"></span>
+        </div>
+        <div class="task-info">
+          <strong>Status:</strong>
+          <span class="badge" th:text="${task.status}"></span>
+        </div>
+        <div class="task-info">
+          <strong>Priority:</strong>
+          <span
+            th:class="'badge priority-' + ${task.priority.toLowerCase()}"
+            th:text="${task.priority}"
+          ></span>
+        </div>
+        <div class="task-info">
+          <strong>Category:</strong> <span th:text="${task.category}"></span>
+        </div>
+        <div class="task-info">
+          <strong>Event Date:</strong> <span th:text="${task.eventDate}"></span>
+        </div>
+        <div class="task-info">
+          <strong>End Date:</strong> <span th:text="${task.endDate}"></span>
+        </div>
+
+        <!-- Edit Task Button -->
+        <div class="task-footer">
+          <a
+            th:href="@{/{orgId}/editTask/{id}(orgId=${org_id}, id=${task.id})}"
+            class="btn btn-edit"
+          >
+            <i class="fas fa-edit"></i> Edit Task
+          </a>
+        </div>
+      </div>
+    </div>
+    <a href="/organization/profile/{id}(id=${org.id})" class="btn btn-primary">Back</a>
+    <script src="/js/auth.js"></script>
+  </body>
+</html>

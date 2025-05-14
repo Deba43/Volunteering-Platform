@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Community Voluntary - User Profile</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+    <style>
+      :root {
+        --primary-color: #9933cc;
+        --secondary-color: #f8eeff;
+        --hover-color: #e9d5ff;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f8f9fa;
+      }
+
+      .header {
+        background-color: var(--primary-color);
+        color: white;
+        padding: 15px 0;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .sidebar {
+        background-color: var(--secondary-color);
+        min-height: calc(100vh - 70px);
+        padding: 20px 0;
+        transition: all 0.3s ease;
+      }
+
+      .sidebar-item {
+        padding: 10px 20px;
+        border-bottom: 1px solid #e9d5ff;
+        transition: all 0.2s ease;
+      }
+
+      .sidebar-item.active {
+        background-color: var(--hover-color);
+        font-weight: bold;
+        border-left: 4px solid var(--primary-color);
+      }
+
+      .sidebar-item:hover {
+        background-color: var(--hover-color);
+        cursor: pointer;
+        transform: translateX(5px);
+      }
+
+      .main-content {
+        padding: 30px;
+        background-image: url("https://media.istockphoto.com/id/1455503488/photo/businessman-displaying-a-digital-technology-background-network-connection-concept.jpg?s=2048x2048&w=is&k=20&c=N5Whc1vvDUY0RVuFsgGpQ5fD0ouGsJ_5asaP1Qy-vD8=");
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        background-color: rgba(255, 255, 255, 0.8);
+        background-blend-mode: lighten;
+      }
+
+      .get-involved-btn {
+        background-color: #333;
+        color: white;
+        transition: all 0.3s ease;
+      }
+
+      .get-involved-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .nav-links {
+        color: white;
+        text-decoration: none;
+        transition: all 0.2s ease;
+        position: relative;
+        margin: 0px 8px;
+      }
+
+      .nav-links:hover {
+        color: #f0f0f0;
+      }
+
+      .profile-container {
+        position: relative;
+        background-color: white;
+        border-radius: 15px;
+        padding: 40px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+        max-width: 800px;
+        margin: 0 auto;
+      }
+
+      .edit-profile-btn {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background-color: var(--primary-color);
+        color: white;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: none;
+        text-decoration: none;
+        z-index: 1;
+      }
+
+      .profile-photo-container {
+        position: relative;
+        width: 200px;
+        height: 200px;
+        margin: 0 auto 30px;
+      }
+
+      .profile-photo {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 5px solid white;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+      }
+
+      .edit-avatar-btn {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        background-color: var(--primary-color);
+        color: white;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: none;
+      }
+
+      .edit-profile-btn:hover,
+      .edit-avatar-btn:hover {
+        background-color: #7a29a3;
+        transform: rotate(15deg);
+      }
+
+      .avatar-modal .modal-content {
+        border-radius: 15px;
+        overflow: hidden;
+      }
+
+      .avatar-option {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin: 10px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: 3px solid transparent;
+      }
+
+      .avatar-option:hover {
+        transform: scale(1.1);
+        border-color: var(--primary-color);
+      }
+
+      .avatar-option.selected {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px var(--hover-color);
+      }
+
+      .section-title {
+        color: var(--primary-color);
+        margin-bottom: 30px;
+        position: relative;
+        padding-bottom: 10px;
+        text-align: center;
+      }
+
+      .section-title::after {
+        content: "";
+        position: absolute;
+        width: 60px;
+        height: 3px;
+        background-color: var(--primary-color);
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+      }
+
+      .profile-label {
+        font-weight: 600;
+        color: #555;
+        text-align: right;
+        padding-right: 15px;
+      }
+
+      .profile-value {
+        color: #333;
+        font-weight: 500;
+        text-align: left;
+        padding-left: 15px;
+      }
+
+      .profile-info {
+        max-width: 500px;
+        margin: 0% 0% 0% 25%;
+      }
+
+      .welcome-message {
+        text-align: center;
+        font-size: 1.5rem;
+        margin-bottom: 30px;
+        color: var(--primary-color);
+        font-weight: 600;
+      }
+
+      @media (max-width: 768px) {
+        .profile-container {
+          padding: 20px;
+        }
+
+        .profile-photo-container {
+          width: 150px;
+          height: 150px;
+        }
+
+        .profile-label {
+          text-align: left;
+          padding-right: 0;
+        }
+
+        .profile-value {
+          padding-left: 0;
+          margin-bottom: 15px;
+        }
+      }
+
+      li {
+        padding: 0px 12px 0px 12px;
+        font-size: 1.1rem;
+      }
+
+      .navbar-nav {
+        margin-left: auto;
+        display: flex;
+        align-items: center;
+      }
+
+      .sidebar-item i {
+        font-size: 18px;
+        margin-right: 10px;
+      }
+      .nav-links:hover {
+        color: orange;
+      }
+    </style>
+  </head>
+  <body class="bg-purple-100 min-h-screen">
+    <!-- Header Navigation -->
+    <div class="header">
+      <div class="container">
+        <div class="row align-items-center">
+          <div class="col-md-3">
+            <!-- Logo placeholder -->
+            <h3 class="mb-0">
+              <a class="navbar-brand" th:href="@{/}">Community Volunteering</a>
+            </h3>
+          </div>
+          <div class="col-md-7">
+            <nav class="navbar navbar-expand p-0">
+              <div class="container-fluid p-0">
+                <div class="collapse navbar-collapse">
+                  <ul class="navbar-nav mx-auto" style="gap: 20px">
+                    <li class="nav-item">
+                      <a class="nav-links" th:href="@{/viewAllTasks}"
+                        >Volunteer Opportunity</a
+                      >
+                    </li>
+                    <li class="nav-item dropdown">
+                      <a
+                        class="nav-links dropdown-toggle"
+                        href="#"
+                        id="taskDropdown"
+                        role="button"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                      >
+                        Search & Filter
+                      </a>
+                      <ul class="dropdown-menu" aria-labelledby="taskDropdown">
+                        <li>
+                          <a
+                            class="dropdown-item"
+                            th:href="@{/getTaskByTitlePage}"
+                            >Search By Title</a
+                          >
+                        </li>
+                        <li>
+                          <a
+                            class="dropdown-item"
+                            th:href="@{/getTaskByLocationPage}"
+                            >Search By Location</a
+                          >
+                        </li>
+                        <li>
+                          <a
+                            class="dropdown-item"
+                            th:href="@{/getTaskByCategoryPage}"
+                            >Search By Category</a
+                          >
+                        </li>
+                        <li>
+                          <a
+                            class="dropdown-item"
+                            th:href="@{/getTaskByDatePage}"
+                            >Search By Date</a
+                          >
+                        </li>
+                      </ul>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-links" th:href="@{/tasksignup/form}"
+                        >Sign Up</a
+                      >
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-links" th:href="@{/ratings/form}">Rating</a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </nav>
+          </div>
+          <div class="col-md-2 text-end">
+            <a th:href="@{/users/logout}" class="btn get-involved-btn">Log Out</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container-fluid">
+      <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-2 sidebar">
+          <div class="sidebar-item">
+            <a
+              th:href="@{/users/edit/{id}(id=${user.id})}"
+              class="text-decoration-none text-dark"
+            >
+              <i class="fas fa-user-edit me-2"></i> Update Profile
+            </a>
+          </div>
+          <div class="sidebar-item active">
+            <a
+              th:href="@{/users/profile/{id}(id=${user.id})}"
+              class="text-decoration-none text-dark"
+            >
+              <i class="fas fa-user-circle me-2"></i> View Profile
+            </a>
+          </div>
+          <div class="sidebar-item">
+            <a
+              th:href="@{/tasksignup/user/mytasks}"
+              class="text-decoration-none text-dark"
+            >
+              <i class="fas fa-tasks me-2"></i> My Tasks
+            </a>
+          </div>
+          <div class="sidebar-item">
+            <a
+              th:href="@{/ratings/my-ratings}"
+              class="text-decoration-none text-dark"
+            >
+              <i class="fas fa-star me-2"></i> My Reviews
+            </a>
+          </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-md-10 main-content">
+          <div class="profile-container">
+            <!-- Edit Profile Button at top-right of card -->
+            <a
+              th:href="@{/users/edit/{id}(id=${user.id})}"
+              class="edit-profile-btn"
+            >
+              <i class="fas fa-pencil-alt"></i>
+            </a>
+
+            <h3 class="section-title">My Profile</h3>
+
+            <!-- Welcome Message -->
+            <div class="welcome-message">
+              Welcome,
+              <span style="color: green" th:text="${user.userName}"
+                >Username</span
+              >!
+            </div>
+
+            <!-- Profile Photo Section -->
+            <div class="profile-photo-container">
+              <img
+                id="user-avatar"
+                class="profile-photo"
+                th:attr="data-userid=${user.id}"
+                alt="Profile Photo"
+              />
+
+              <!-- Edit Avatar Button -->
+              <button
+                class="edit-avatar-btn"
+                data-bs-toggle="modal"
+                data-bs-target="#avatarModal"
+              >
+                <i class="fas fa-camera"></i>
+              </button>
+            </div>
+
+            <!-- Profile Information -->
+            <div class="profile-info">
+              <div class="row mb-3">
+                <div class="col-md-4 profile-label">Username:</div>
+                <div class="col-md-8 profile-value" th:text="${user.userName}">
+                  userName
+                </div>
+              </div>
+              <div class="row mb-3">
+                <div class="col-md-4 profile-label">Password:</div>
+                <div class="col-md-8 profile-value">••••••••••</div>
+              </div>
+              <div class="row mb-3">
+                <div class="col-md-4 profile-label">Name:</div>
+                <div
+                  class="col-md-8 profile-value"
+                  th:text="${user.firstName + ' ' + user.lastName}"
+                >
+                  Name
+                </div>
+              </div>
+              <div class="row mb-3">
+                <div class="col-md-4 profile-label">Phone number:</div>
+                <div
+                  class="col-md-8 profile-value"
+                  th:text="${user.phoneNumber}"
+                >
+                  1234567890
+                </div>
+              </div>
+              <div class="row mb-3" th:if="${user.email != null}">
+                <div class="col-md-4 profile-label">Email:</div>
+                <div class="col-md-8 profile-value" th:text="${user.email}">
+                  user@example.com
+                </div>
+              </div>
+              <div class="row mb-3" th:if="${user.alternativeEmail != null}">
+                <div class="col-md-4 profile-label">Alternative Email:</div>
+                <div
+                  class="col-md-8 profile-value"
+                  th:text="${user.alternativeEmail}"
+                >
+                  alternative@example.com
+                </div>
+              </div>
+              <div class="row mb-3" th:if="${user.gender != null}">
+                <div class="col-md-4 profile-label">Gender:</div>
+                <div class="col-md-8 profile-value" th:text="${user.gender}">
+                  gender
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Avatar Selection Modal -->
+    <div
+      class="modal fade avatar-modal"
+      id="avatarModal"
+      tabindex="-1"
+      aria-labelledby="avatarModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="avatarModalLabel">
+              Choose Your Avatar
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body text-center">
+            <div class="row justify-content-center">
+              <div class="col-4">
+                <img
+                  src="https://api.dicebear.com/7.x/avataaars/svg?seed=1"
+                  class="avatar-option"
+                  data-avatar="https://api.dicebear.com/7.x/avataaars/svg?seed=1"
+                />
+              </div>
+              <div class="col-4">
+                <img
+                  src="https://api.dicebear.com/7.x/avataaars/svg?seed=100000000"
+                  class="avatar-option"
+                  data-avatar="https://api.dicebear.com/7.x/avataaars/svg?seed=2"
+                />
+              </div>
+              <div class="col-4">
+                <img
+                  src="https://api.dicebear.com/7.x/avataaars/svg?seed=3"
+                  class="avatar-option"
+                  data-avatar="https://api.dicebear.com/7.x/avataaars/svg?seed=3"
+                />
+              </div>
+              <div class="col-4">
+                <img
+                  src="https://api.dicebear.com/7.x/avataaars/svg?seed=4"
+                  class="avatar-option"
+                  data-avatar="https://api.dicebear.com/7.x/avataaars/svg?seed=4"
+                />
+              </div>
+              <div class="col-4">
+                <img
+                  src="https://api.dicebear.com/7.x/avataaars/svg?seed=5"
+                  class="avatar-option"
+                  data-avatar="https://api.dicebear.com/7.x/avataaars/svg?seed=5"
+                />
+              </div>
+              <div class="col-4">
+                <img
+                  src="https://api.dicebear.com/7.x/avataaars/svg?seed=6"
+                  class="avatar-option"
+                  data-avatar="https://api.dicebear.com/7.x/avataaars/svg?seed=6"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Cancel
+            </button>
+            <button type="button" class="btn btn-primary" id="saveAvatarBtn">
+              Save Avatar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      th:if="${errorMessage}"
+      class="alert alert-danger"
+      th:text="${errorMessage}"
+    ></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Get user ID from Thymeleaf attribute
+        const userAvatar = document.getElementById("user-avatar");
+        const userId = userAvatar.getAttribute("data-userid");
+        const firstName = "${user.firstName}";
+        const lastName = "${user.lastName}";
+
+        // Default avatar generation using user's name
+        const defaultAvatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(
+          firstName + " " + lastName
+        )}&background=random`;
+
+        // Check if user has a saved avatar in localStorage
+        const savedAvatar = localStorage.getItem(`avatar_${userId}`);
+
+        // Set avatar source
+        userAvatar.src = savedAvatar || defaultAvatar;
+
+        // Avatar selection functionality
+        let selectedAvatar = null;
+        const avatarOptions = document.querySelectorAll(".avatar-option");
+
+        avatarOptions.forEach((option) => {
+          option.addEventListener("click", function () {
+            // Remove selected class from all options
+            avatarOptions.forEach((opt) => opt.classList.remove("selected"));
+
+            // Add selected class to clicked option
+            this.classList.add("selected");
+            selectedAvatar = this.getAttribute("data-avatar");
+          });
+        });
+
+        // Save avatar button
+        document
+          .getElementById("saveAvatarBtn")
+          .addEventListener("click", function () {
+            if (selectedAvatar) {
+              // Update the avatar image
+              userAvatar.src = selectedAvatar;
+
+              // Save to localStorage
+              localStorage.setItem(`avatar_${userId}`, selectedAvatar);
+
+              // Close the modal
+              const modal = bootstrap.Modal.getInstance(
+                document.getElementById("avatarModal")
+              );
+              modal.hide();
+
+              // Show success message
+              alert("Avatar updated successfully!");
+            } else {
+              alert("Please select an avatar first.");
+            }
+          });
+
+        // Initialize modal
+        const avatarModal = new bootstrap.Modal(
+          document.getElementById("avatarModal")
+        );
+      });
+    </script>
+    <script src="/js/auth.js"></script>
+  </body>
+</html>

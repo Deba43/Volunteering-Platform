@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>View Organization</title>
+  
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  
+  <!-- Bootstrap Icons CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+  
+  <!-- External CSS -->
+  <link rel="stylesheet" type="text/css" th:href="@{/css/styles.css}">
+  
+  <!-- Bootstrap JS Bundle -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+  	<script th:src="@{/js/particleAnimation.js}"></script>
+  </head>
+<body>
+	<!-- Particle Background Div -->
+		<div id="particle-bg"></div>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg">
+    <div class="container">
+      <a class="navbar-brand" th:href="@{/}">Community Volunteering</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item"><a class="nav-link" th:href="@{/}">Home</a></li>
+          <li class="nav-item"><a class="nav-link" th:href="@{/userregistration}">User Registration</a></li>
+          <li class="nav-item"><a class="nav-link" th:href="@{/volunteer-opportunities}">Volunteer Opportunities</a></li>
+          <li class="nav-item"><a class="nav-link" th:href="@{/search}">Search and Filter</a></li>
+          <li class="nav-item"><a class="nav-link" th:href="@{/organization/form}">Signup</a></li>
+        </ul>
+        <a href="#" class="btn btn-custom ms-3">Get Involved</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content Section -->
+  <div class="container my-5">
+    <div class="row">
+      <!-- Sidebar -->
+      <div class="col-md-3 sidebar">
+        <a th:href="@{/tasksignup/form}">Task Signup</a>
+        <a th:href="@{/tasksignup/view}">View Signups</a>
+        <a th:href="@{/organization/form}">Add Organization</a>
+        <a th:href="@{/organization/view}" class="active">View Organization</a>
+      </div>
+
+      <!-- Organizations Table -->
+      <div class="col-md-91">
+        <div class="card shadow-sm">
+          <div class="card-header bg-white">
+            <h4 class="mb-0">Organizations</h4>
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table table-striped table-hover">
+                <thead class="table-dark">
+                  <tr>
+                    <th>Name</th>
+                    <th>Website</th>
+                    <th>Location</th>
+                    <th>Email</th>
+                    <th>Phone Number</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <!-- If no organizations exist, show a message -->
+                  <tr th:if="${#lists.isEmpty(organizations)}">
+                    <td colspan="7" class="text-center">No organizations found.</td>
+                  </tr>
+                  <!-- Otherwise, iterate over organizations -->
+                  <tr th:each="org : ${organizations}">
+                    <td th:text="${org.name}">Name</td>
+                    <td th:text="${org.website}">Website</td>
+                    <td th:text="${org.location}">Location</td>
+                    <td th:text="${org.email}">Email</td>
+                    <td th:text="${org.phoneNumber}">Phone Number</td>
+                    <td>
+                      <a th:href="@{/organization/edit/{id}(id=${org.id})}" class="btn btn-sm btn-primary">
+                        <i class="bi bi-pencil-square"></i>
+                      </a>
+                      <a th:href="@{/organization/delete/{id}(id=${org.id})}" class="btn btn-sm btn-danger">
+                        <i class="bi bi-trash"></i>
+                      </a>
+                      <!-- View Tasks Button -->
+                      <a th:href="@{/organization/{id}/tasks(id=${org.id})}" class="btn btn-sm btn-info">
+                        <i class="bi bi-list-task"></i>Tasks
+                      </a>
+                    </td>
+                  </tr>
+                </tbody>
+                
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="/js/auth.js"></script>
+</body>
+</html>

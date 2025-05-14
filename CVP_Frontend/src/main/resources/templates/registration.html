@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr auto; /* Email field takes 1fr, Verify button takes auto width */
+            gap: 1rem; /* Space between email field and Verify button */
+            align-items: end; /* Align items at the bottom */
+        }
+
+        .otp-section {
+            display: none; /* Initially hidden */
+            grid-template-columns: 1fr auto; /* OTP field takes 1fr, Verify OTP button takes auto width */
+            gap: 1rem; /* Space between OTP field and Verify OTP button */
+            align-items: end; /* Align items at the bottom */
+        }
+
+        .message-box {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            display: none; /* Initially hidden */
+        }
+
+        .success {
+            background-color: #d1fae5; /* Green background */
+            color: #065f46; /* Dark green text */
+        }
+
+        .error {
+            background-color: #fee2e2; /* Red background */
+            color: #991b1b; /* Dark red text */
+        }
+    </style>
+    <script>
+        function showOTPField() {
+        const input = document.getElementById("email");
+         const email = input.value;   
+         
+        fetch(`http://localhost:7777/users/generate/${email}`, {
+        method: "POST"
+        })
+      .then((res) =>  {
+                if(res.status==200){
+             // Show success message
+                document.getElementById('otpsuccessMessage').style.display = 'block';
+                document.getElementById('otperrorMessage').style.display = 'none';
+             }else{
+             // Show error message
+                document.getElementById('otperrorMessage').style.display = 'block';
+                document.getElementById('otpsuccessMessage').style.display = 'none';  
+               } })
+               
+            .then(data => {
+      
+             document.getElementById('verifyButton').style.display = 'none';
+             document.getElementById('otpSection').style.display = 'grid'; // Show OTP input field
+                   })
+            .catch(error => console.error("Error:", error));
+    
+        
+           }
+        
+        
+
+        function verifyOTP() {
+           const input = document.getElementById("email");
+            const email = input.value;   
+            const enteredOTP = document.getElementById('otp').value;
+            let generatedOTP = document.getElementById('generatedOTP').value;
+            
+              fetch(`http://localhost:7777/users/verify?email=${email}&otp=${enteredOTP}`, {
+                method: "POST"
+        })  
+           .then((res) => {
+           if(res.status==200){
+            document.getElementById('otpsuccessMessage').style.display = 'none';  
+                  document.getElementById('otperrorMessage').style.display = 'none';
+            // Show success message
+                document.getElementById('successMessage').style.display = 'block';
+                document.getElementById('errorMessage').style.display = 'none';
+                
+                //setting email readonly
+                
+                document.getElementById('email').readOnly = true;
+                
+                
+           }else{
+             // Show error message
+                document.getElementById('errorMessage').style.display = 'block';
+                document.getElementById('successMessage').style.display = 'none';  
+           }
+           }
+           )
+          .catch(error => console.error("Error:", error));
+
+        }
+    </script>
+</head>
+<body class="bg-purple-100">
+    <header class="bg-purple-600 text-white p-4 flex justify-between items-center">
+        <div class="text-2xl font-bold">community voluntary</div>
+        <nav class="space-x-4">
+            <a href="#" class="hover:underline">Home</a>
+            <a href="#" class="hover:underline">User Registration</a>
+            <a href="#" class="hover:underline">Volunteer Opportunity</a>
+            <a href="#" class="hover:underline">search & Filter</a>
+            <a href="#" class="hover:underline">Sign Up</a>
+            <a href="#" class="hover:underline">Rating</a>
+        </nav>
+        <button class="bg-black text-white px-4 py-2 rounded">Get Involved</button>
+    </header>
+    <div class="flex">
+        <aside class="bg-purple-200 w-1/4 p-4">
+            <ul class="space-y-4">
+                <li class="bg-white p-2 rounded shadow">User Registration</li>
+                <li class="p-2 rounded hover:bg-white cursor-pointer">Registration Form</li>
+                <li class="p-2 rounded hover:bg-white cursor-pointer">Update Profile</li>
+                <li class="p-2 rounded hover:bg-white cursor-pointer">View Volunteer</li>
+                <li class="p-2 rounded hover:bg-white cursor-pointer">View Organization</li>
+                <li class="p-2 rounded hover:bg-white cursor-pointer">Delete Account</li>
+            </ul>
+        </aside>
+        <main class="flex-1 p-8">
+            <h1 class="text-3xl font-bold mb-8">User Registration Form</h1>
+            <form class="space-y-4" th:action="@{/users/register}" method="post">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block mb-1">First Name</label>
+                        <input type="text" placeholder="Enter First name" class="w-full p-2 border rounded" name="firstName">
+                    </div>
+                    <div>
+                        <label class="block mb-1">Last Name</label>
+                        <input type="text" placeholder="Enter Last name" class="w-full p-2 border rounded" name="lastName">
+                    </div>
+                    <div>
+                        <label class="block mb-1">User Name</label>
+                        <input type="text" placeholder="Enter Username" class="w-full p-2 border rounded" name="userName">
+                    </div>
+                    <div>
+                        <label class="block mb-1">Password</label>
+                        <input type="password" placeholder="Enter Password" class="w-full p-2 border rounded" name="password">
+                    </div>
+                    <!-- Email and Verify Button -->
+                    <div class="form-grid">
+                        <div>
+                            <label class="block mb-1">Email</label>
+                            <input type="email" placeholder="Example@gmail.com" class="w-full p-2 border rounded" name="email" id="email">
+                        </div>
+                        <div>
+                            <button type="button" id="verifyButton" class="bg-black text-white px-4 py-2 rounded" onclick="showOTPField()">Verify</button>
+                        </div>
+                    </div>
+                    <!-- OTP Section (Initially Hidden) -->
+                    <div id="otpSection" class="otp-section">
+                        <div>
+                            <label class="block mb-1">Enter OTP</label>
+                            <input type="text" id="otp" placeholder="Enter OTP" class="w-full p-2 border rounded" name="otp">
+                        </div>
+                        <div>
+                            <button type="button" class="bg-black text-white px-4 py-2 rounded" onclick="verifyOTP()">Verify OTP</button>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block mb-1">Phone Number</label>
+                        <input type="text" placeholder="Enter Phone Number" class="w-full p-2 border rounded" name="phoneNumber">
+                    </div>
+                    <div>
+                        <label class="block mb-1">Alternative Email</label>
+                        <input type="email" placeholder="Example@gmail.com" class="w-full p-2 border rounded" name="alternativeEmail">
+                    </div>
+                </div>
+                <div>
+                    <label class="block mb-1">Gender</label>
+                    <div class="space-x-4">
+                        <label><input type="radio" name="gender" value="male"> male</label>
+                        <label><input type="radio" name="gender" value="female"> female</label>
+                        <label><input type="radio" name="gender" value="other"> other</label>
+                    </div>
+                </div>
+                <button type="submit" class="bg-black text-white px-4 py-2 rounded">Register</button>
+            </form>
+            <!-- Success and Error Messages -->
+             <div id="otpsuccessMessage" class="message-box success">
+                otp sent successfully!
+            </div>
+            <div id="otperrorMessage" class="message-box error">
+                otp sent failed try Again !
+            </div>
+            <div id="successMessage" class="message-box success">
+                Email verified successfully!
+            </div>
+            <div id="errorMessage" class="message-box error">
+                Verification failed. Please try again.
+            </div>
+        </main>
+    </div>
+    <!-- Hidden field to store generated OTP -->
+    <input type="hidden" id="generatedOTP" th:value="${generatedOTP}">
+    <script src="/js/auth.js"></script>
+</body>
+</html>

@@ -1,0 +1,726 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Update Task</title>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --primary: #6366f1;
+        --primary-dark: #4f46e5;
+        --primary-light: #c7d2fe;
+        --primary-extra-light: #eef2ff;
+        --accent: #f97316;
+        --accent-light: #fdba74;
+        --success: #10b981;
+        --error: #ef4444;
+        --warning: #f59e0b;
+        --bg-light: #f9fafb;
+        --text-dark: #1e293b;
+        --text-medium: #64748b;
+        --text-light: #f8fafc;
+        --border-light: #e2e8f0;
+        --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+          0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+          0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+          0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        --radius-sm: 0.25rem;
+        --radius: 0.5rem;
+        --radius-lg: 0.75rem;
+        --radius-xl: 1rem;
+        --transition: all 0.3s ease;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Poppins", sans-serif;
+      }
+
+      body {
+        background: var(--bg-light);
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 2rem;
+        color: var(--text-dark);
+        line-height: 1.6;
+        padding-top: 80px;
+      }
+
+      .container {
+        width: 100%;
+        max-width: 800px;
+      }
+
+      .card {
+        background: white;
+        border-radius: var(--radius-xl);
+        box-shadow: var(--shadow-lg);
+        overflow: hidden;
+        transition: var(--transition);
+      }
+
+      .card-header {
+        background: linear-gradient(135deg, #ff54e2, var(--primary-dark));
+        color: white;
+        padding: 1.5rem 2rem;
+        border-top-left-radius: var(--radius-xl);
+        border-top-right-radius: var(--radius-xl);
+      }
+
+      .card-header h1 {
+        font-size: 1.75rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      .card-header h1 i {
+        font-size: 1.5rem;
+      }
+
+      .card-body {
+        padding: 2rem;
+      }
+
+      .form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .form-group {
+        margin-bottom: 1rem;
+      }
+
+      .form-group.full-width {
+        grid-column: span 2;
+      }
+
+      label {
+        display: block;
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+        color: #c41b96;
+        font-size: 0.95rem;
+      }
+
+      .input-wrapper {
+        position: relative;
+      }
+
+      .input-field {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 1px solid var(--border-light);
+        border-radius: var(--radius);
+        font-size: 0.95rem;
+        transition: var(--transition);
+        background-color: var(--primary-extra-light);
+      }
+
+      .input-field:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+        background-color: white;
+      }
+
+      .input-field.select {
+        appearance: none;
+        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right 0.75rem center;
+        background-size: 1rem;
+      }
+
+      .input-icon {
+        position: absolute;
+        right: 1rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--text-medium);
+        pointer-events: none;
+      }
+
+      .btn-group {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1.5rem;
+        justify-content: flex-end;
+      }
+
+      .btn {
+        padding: 0.75rem 1.5rem;
+        border-radius: var(--radius);
+        font-weight: 500;
+        font-size: 0.95rem;
+        border: none;
+        cursor: pointer;
+        transition: var(--transition);
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .btn-primary {
+        background: #c310bd;
+        color: white;
+      }
+
+      .btn-primary:hover {
+        background: var(--primary-dark);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow);
+      }
+
+      .btn-secondary {
+        background: var(--accent);
+        color: white;
+      }
+
+      .btn-secondary:hover {
+        background: var(--accent-light);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow);
+      }
+
+      .btn-outline {
+        background: transparent;
+        border: 1px solid var(--border-light);
+        color: var(--text-medium);
+      }
+
+      .btn-outline:hover {
+        background: var(--primary-extra-light);
+        color: var(--primary-dark);
+        border-color: var(--primary-light);
+      }
+
+      /* Modal Styles */
+      .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 1000;
+        justify-content: center;
+        align-items: center;
+        animation: fadeIn 0.3s ease;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      .modal-content {
+        background-color: white;
+        padding: 2rem;
+        border-radius: var(--radius-lg);
+        width: 90%;
+        max-width: 400px;
+        box-shadow: var(--shadow-lg);
+        position: relative;
+        text-align: center;
+        animation: slideIn 0.3s ease;
+      }
+
+      @keyframes slideIn {
+        from {
+          transform: translateY(-20px);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      .close-btn {
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: var(--text-medium);
+        transition: var(--transition);
+      }
+
+      .close-btn:hover {
+        color: var(--text-dark);
+        transform: rotate(90deg);
+      }
+
+      .modal-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+      }
+
+      .success-icon {
+        color: var(--success);
+      }
+
+      .error-icon {
+        color: var(--error);
+      }
+
+      .modal-title {
+        font-size: 1.5rem;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+      }
+
+      .modal-message {
+        margin-bottom: 1.5rem;
+        color: var(--text-medium);
+      }
+
+      .modal-btn {
+        padding: 0.75rem 1.5rem;
+        border-radius: var(--radius);
+        font-weight: 500;
+        border: none;
+        cursor: pointer;
+        transition: var(--transition);
+        min-width: 100px;
+      }
+
+      .success-btn {
+        background: var(--success);
+        color: white;
+      }
+
+      .error-btn {
+        background: var(--error);
+        color: white;
+      }
+
+      .modal-btn:hover {
+        opacity: 0.9;
+        transform: translateY(-2px);
+        box-shadow: var(--shadow);
+      }
+
+      /* Responsive Adjustments */
+      @media (max-width: 768px) {
+        .form-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .form-group.full-width {
+          grid-column: span 1;
+        }
+
+        .btn-group {
+          flex-direction: column;
+        }
+
+        .btn {
+          width: 100%;
+          justify-content: center;
+        }
+      }
+
+      /* Custom Checkbox for Status */
+      .status-options {
+        display: flex;
+        gap: 1rem;
+        margin-top: 0.5rem;
+      }
+
+      .status-option {
+        flex: 1;
+      }
+
+      .status-option input[type="radio"] {
+        display: none;
+      }
+
+      .status-option label {
+        display: block;
+        padding: 0.75rem;
+        border-radius: var(--radius);
+        text-align: center;
+        cursor: pointer;
+        transition: var(--transition);
+        background: var(--primary-extra-light);
+        border: 1px solid var(--border-light);
+      }
+
+      .status-option input[type="radio"]:checked + label {
+        background: var(--primary);
+        color: white;
+        border-color: var(--primary);
+        font-weight: 500;
+      }
+
+      /* Date Input Customization */
+      input[type="date"]::-webkit-calendar-picker-indicator {
+        filter: invert(0.5);
+        cursor: pointer;
+      }
+
+      input[type="date"]::-webkit-calendar-picker-indicator:hover {
+        filter: invert(0.3);
+      }
+      .navbar {
+        position: fixed;
+        width: 100%;
+        top: 0;
+        z-index: 1000;
+        background: #981fa1;
+        padding: 15px 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: var(--shadow);
+      }
+
+      .navbar .container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 1rem;
+      }
+      .navbar-brand {
+        font-size: 1.8rem;
+        font-weight: bold;
+        color: white !important;
+        text-decoration: none !important;
+      }
+
+      .navbar-nav {
+        list-style: none;
+        display: flex;
+        gap: 1rem;
+        margin: 0;
+      }
+
+      .nav-item {
+        list-style: none;
+      }
+
+      .nav-link {
+        font-size: 1.1rem;
+        padding: 0.5rem 1rem;
+        color: #fff;
+        text-decoration: none;
+        transition: color 0.3s ease;
+      }
+
+      .nav-link:hover {
+        color: #f9ad55;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="container">
+        <a class="navbar-brand" href="#">Community Volunteering</a>
+        <ul class="navbar-nav">
+          <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="/about">About</a></li>
+          <li class="nav-item">
+            <a class="nav-link" href="/events">Events</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/organization/profile">Profile</a>
+          </li>
+          <li class="nav-item"><a class="nav-link" href="/">Logout</a></li>
+        </ul>
+      </div>
+    </nav>
+    <div class="container">
+      <div class="card">
+        <div class="card-header">
+          <h1>
+            <i class="fas fa-edit"></i>
+            <span>Update Task</span>
+          </h1>
+        </div>
+        <div class="card-body">
+          <form
+            th:action="@{/{orgId}/updateTask/{id}(orgId=${org_id}, id=${task.id})}"
+            method="post"
+            th:object="${task}"
+          >
+            <input type="hidden" name="_method" value="put" />
+            <input type="hidden" name="id" th:value="*{id}" />
+
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="title">Title</label>
+                <div class="input-wrapper">
+                  <input
+                    type="text"
+                    class="input-field"
+                    id="title"
+                    th:field="*{title}"
+                    placeholder="Enter task title"
+                    required
+                  />
+                  <i class="fas fa-heading input-icon"></i>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="priority">Priority</label>
+                <select
+                  class="input-field select"
+                  id="priority"
+                  th:field="*{priority}"
+                  required
+                >
+                  <option value="" disabled selected>Select priority</option>
+                  <option value="LOW">Low</option>
+                  <option value="MEDIUM">Medium</option>
+                  <option value="HIGH">High</option>
+                </select>
+              </div>
+
+              <div class="form-group full-width">
+                <label for="description">Description</label>
+                <textarea
+                  class="input-field"
+                  id="description"
+                  th:field="*{description}"
+                  rows="3"
+                  placeholder="Enter task description"
+                  required
+                ></textarea>
+              </div>
+
+              <div class="form-group">
+                <label>Status</label>
+                <div class="status-options">
+                  <div class="status-option">
+                    <input
+                      type="radio"
+                      id="status-pending"
+                      name="status"
+                      th:value="PENDING"
+                      th:checked="${task.status == 'PENDING'}"
+                    />
+                    <label for="status-pending">Pending</label>
+                  </div>
+                  <div class="status-option">
+                    <input
+                      type="radio"
+                      id="status-progress"
+                      name="status"
+                      th:value="IN_PROGRESS"
+                      th:checked="${task.status == 'IN_PROGRESS'}"
+                    />
+                    <label for="status-progress">In Progress</label>
+                  </div>
+                  <div class="status-option">
+                    <input
+                      type="radio"
+                      id="status-completed"
+                      name="status"
+                      th:value="COMPLETED"
+                      th:checked="${task.status == 'COMPLETED'}"
+                    />
+                    <label for="status-completed">Completed</label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="category">Category</label>
+                <select
+                  class="input-field select"
+                  id="category"
+                  th:field="*{category}"
+                  required
+                >
+                  <option value="" disabled selected>Select category</option>
+                  <option value="HEALTH">Health</option>
+                  <option value="ENVIRONMENT">Environment</option>
+                  <option value="EDUCATION">Education</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="eventDate">Start Date</label>
+                <div class="input-wrapper">
+                  <input
+                    type="date"
+                    class="input-field"
+                    id="eventDate"
+                    th:field="*{eventDate}"
+                    required
+                  />
+                  <i class="far fa-calendar-alt input-icon"></i>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="endDate">End Date</label>
+                <div class="input-wrapper">
+                  <input
+                    type="date"
+                    class="input-field"
+                    id="endDate"
+                    th:field="*{endDate}"
+                    required
+                  />
+                  <i class="far fa-calendar-alt input-icon"></i>
+                </div>
+              </div>
+
+              <div class="form-group full-width">
+                <label for="location">Location</label>
+                <div class="input-wrapper">
+                  <input
+                    type="text"
+                    class="input-field"
+                    id="location"
+                    th:field="*{location}"
+                    placeholder="Enter task location"
+                    required
+                  />
+                  <i class="fas fa-map-marker-alt input-icon"></i>
+                </div>
+              </div>
+            </div>
+
+            <div class="btn-group">
+              <button
+                type="button"
+                class="btn btn-outline"
+                th:onclick="|window.location.href='/viewAlltasks'|"
+              >
+                <i class="fas fa-arrow-left"></i> Cancel
+              </button>
+              <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i> Update Task
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="modal">
+      <div class="modal-content">
+        <span class="close-btn">&times;</span>
+        <div class="modal-icon success-icon">
+          <i class="fas fa-check-circle"></i>
+        </div>
+        <h3 class="modal-title">Success!</h3>
+        <p class="modal-message" id="successMessage">
+          Task updated successfully!
+        </p>
+        <button class="modal-btn success-btn" id="successOkBtn">
+          <i class="fas fa-check"></i> OK
+        </button>
+      </div>
+    </div>
+
+    <!-- Error Modal -->
+    <div id="errorModal" class="modal">
+      <div class="modal-content">
+        <span class="close-btn">&times;</span>
+        <div class="modal-icon error-icon">
+          <i class="fas fa-exclamation-circle"></i>
+        </div>
+        <h3 class="modal-title">Error!</h3>
+        <p class="modal-message" id="errorMessage"></p>
+        <button class="modal-btn error-btn" id="errorOkBtn">
+          <i class="fas fa-times"></i> OK
+        </button>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const successMessage = "[[${updatedtask}]]";
+        const errorMessage = "[[${error}]]";
+        const orgId = "[[${org_id}]]";
+
+        if (successMessage && successMessage.trim() !== "") {
+          document.getElementById("successMessage").textContent =
+            successMessage;
+          document.getElementById("successModal").style.display = "flex";
+
+          // Automatically redirect after 3 seconds
+          setTimeout(() => {
+            window.location.href = "/organization/profile/" + orgId;
+          }, 2000);
+        }
+
+        if (errorMessage && errorMessage.trim() !== "") {
+          document.getElementById("errorMessage").textContent = errorMessage;
+          document.getElementById("errorModal").style.display = "flex";
+        }
+
+        // Close modals when clicking X or OK button
+        const closeModal = function (modalId) {
+          document.getElementById(modalId).style.display = "none";
+        };
+
+        document
+          .querySelector("#successModal .close-btn")
+          .addEventListener("click", () => closeModal("successModal"));
+        document
+          .getElementById("successOkBtn")
+          .addEventListener("click", () => closeModal("successModal"));
+        document
+          .querySelector("#errorModal .close-btn")
+          .addEventListener("click", () => closeModal("errorModal"));
+        document
+          .getElementById("errorOkBtn")
+          .addEventListener("click", () => closeModal("errorModal"));
+
+        window.addEventListener("click", function (event) {
+          if (event.target === document.getElementById("successModal"))
+            closeModal("successModal");
+          if (event.target === document.getElementById("errorModal"))
+            closeModal("errorModal");
+        });
+
+        // Button hover animation
+        document.querySelectorAll(".btn").forEach((button) => {
+          button.addEventListener(
+            "mouseenter",
+            () => (button.style.transform = "translateY(-2px)")
+          );
+          button.addEventListener(
+            "mouseleave",
+            () => (button.style.transform = "translateY(0)")
+          );
+        });
+      });
+    </script>
+
+    <script src="/js/auth.js"></script>
+  </body>
+</html>
